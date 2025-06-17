@@ -1,6 +1,12 @@
 name: Node.js CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - test
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -13,3 +19,4 @@ jobs:
           node-version: 18
       - run: npm install
       - run: npm test
+          

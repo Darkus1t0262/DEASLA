@@ -1,7 +1,5 @@
-output "target_group_arns" {
-  value = aws_lb_target_group.services[*].arn
-}
 
-output "listener_arn" {
-  value = aws_lb_listener.http.arn
+output "dns_name" {
+  description = "The DNS name of the ALB"
+  value       = aws_lb.main.dns_name
 }

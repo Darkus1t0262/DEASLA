@@ -1,7 +1,10 @@
+
 variable "vpc_id" {
-  type = string
+  description = "The ID of the VPC where the ALB will be deployed"
+  type        = string
 }
 
 variable "public_subnet_ids" {
-  type = list(string)
+  description = "List of public subnet IDs"
+  type        = list(string)
 }

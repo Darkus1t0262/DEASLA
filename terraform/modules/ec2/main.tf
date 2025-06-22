@@ -1,6 +1,3 @@
-variable "instance_name" {}
-variable "docker_image" {}
-
 resource "aws_instance" "microservice" {
   ami           = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2
   instance_type = "t2.micro"

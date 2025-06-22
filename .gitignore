@@ -1,0 +1,38 @@
+# Maven output
+/target/
+*.jar
+*.war
+*.ear
+
+# Compiled class files
+*.class
+
+# Logs and build info
+*.log
+*.lst
+*.original
+*.properties
+
+# IDE/Tool folders
+/.idea/
+/.vscode/
+/*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Terraform state
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Terraform plan files
+*.tfplan
+
+# CLI configs
+.terraform.lock.hcl
+*.tfvars
+
+# Providers (like the .exe in your image)
+terraform-provider-*.exe

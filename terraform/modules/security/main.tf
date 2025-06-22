@@ -1,5 +1,3 @@
-variable "vpc_id" {}
-variable "public_subnet_id" {}
 
 resource "aws_security_group" "bastion_sg" {
   name        = "bastion-sg"

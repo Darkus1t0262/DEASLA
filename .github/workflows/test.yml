@@ -51,7 +51,7 @@ jobs:
 
       - name: Run tests in domains/alert-management/${{ matrix.service }}
         run: |
-          cd domains/alert-management/${{ matrix.service }}
+          cd domains/alert-managment/${{ matrix.service }}
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
             pytest tests

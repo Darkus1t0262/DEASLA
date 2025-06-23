@@ -1,3 +1,6 @@
-# retry-engine
+## retry-engine
 
-This is the `retry-engine` microservice under the `notification` domain.
+Retries failed notifications with exponential backoff.
+
+- **Port**: 4104
+- **Language**: Python

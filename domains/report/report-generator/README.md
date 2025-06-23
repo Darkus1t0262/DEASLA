@@ -1,3 +1,6 @@
-# report-generator
+## report-generator
 
-This is the `report-generator` microservice under the `report` domain.
+Generates reports in CSV/PDF.
+
+- **Port**: 4204
+- **Language**: Java

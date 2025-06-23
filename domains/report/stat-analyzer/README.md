@@ -1,3 +1,6 @@
-# stat-analyzer
+## stat-analyzer
 
-This is the `stat-analyzer` microservice under the `report` domain.
+Performs statistical analysis on collected data.
+
+- **Port**: 4205
+- **Language**: Python

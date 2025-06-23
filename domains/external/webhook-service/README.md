@@ -1,3 +1,6 @@
-# webhook-service
+## webhook-service
 
-This is the `webhook-service` microservice under the `external` domain.
+Processes incoming webhook events.
+
+- **Port**: 4003
+- **Language**: Node.js

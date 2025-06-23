@@ -1,3 +1,6 @@
-# channel-validator
+## channel-validator
 
-This is the `channel-validator` microservice under the `external` domain.
+Validates third-party channels before broadcasting.
+
+- **Port**: 4005
+- **Language**: Go

@@ -1,3 +1,6 @@
-# notification-core
+## notification-core
 
-This is the `notification-core` microservice under the `notification` domain.
+Main service managing alert notifications.
+
+- **Port**: 4103
+- **Language**: Node.js

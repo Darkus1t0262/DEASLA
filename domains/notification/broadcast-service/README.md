@@ -1,3 +1,6 @@
-# broadcast-service
+## broadcast-service
 
-This is the `broadcast-service` microservice under the `notification` domain.
+Handles mass alert broadcast logic.
+
+- **Port**: 4101
+- **Language**: Python

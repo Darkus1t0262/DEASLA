@@ -1,3 +1,6 @@
-# metrics-collector
+## metrics-collector
 
-This is the `metrics-collector` microservice under the `report` domain.
+Gathers runtime metrics and usage data.
+
+- **Port**: 4203
+- **Language**: Python

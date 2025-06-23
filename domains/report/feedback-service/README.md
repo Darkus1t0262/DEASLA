@@ -1,3 +1,6 @@
-# feedback-service
+## feedback-service
 
-This is the `feedback-service` microservice under the `report` domain.
+Collects feedback from users.
+
+- **Port**: 4202
+- **Language**: Node.js

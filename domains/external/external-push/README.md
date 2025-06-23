@@ -1,3 +1,6 @@
-# external-push
+## external-push
 
-This is the `external-push` microservice under the `external` domain.
+Receives push requests from outside sources.
+
+- **Port**: 4004
+- **Language**: Python

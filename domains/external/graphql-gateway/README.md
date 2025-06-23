@@ -1,3 +1,6 @@
-# graphql-gateway
+## graphql-gateway
 
-This is the `graphql-gateway` microservice under the `external` domain.
+Gateway that exposes data using GraphQL.
+
+- **Port**: 4001
+- **Language**: Node.js

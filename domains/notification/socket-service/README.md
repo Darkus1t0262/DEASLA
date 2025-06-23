@@ -1,3 +1,6 @@
-# socket-service
+## socket-service
 
-This is the `socket-service` microservice under the `notification` domain.
+Real-time alert delivery through WebSocket.
+
+- **Port**: 4105
+- **Language**: Node.js

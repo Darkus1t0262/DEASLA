@@ -1,3 +1,6 @@
-# soap-consumer
+## soap-consumer
 
-This is the `soap-consumer` microservice under the `external` domain.
+Consumes external SOAP web services.
+
+- **Port**: 4002
+- **Language**: Python

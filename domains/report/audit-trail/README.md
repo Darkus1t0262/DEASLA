@@ -1,3 +1,6 @@
-# audit-trail
+## audit-trail
 
-This is the `audit-trail` microservice under the `report` domain.
+Tracks all user actions and system changes.
+
+- **Port**: 4201
+- **Language**: Go

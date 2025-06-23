@@ -1,3 +1,6 @@
-# channel-service
+## channel-service
 
-This is the `channel-service` microservice under the `notification` domain.
+Routes messages to the correct delivery channel.
+
+- **Port**: 4102
+- **Language**: Go

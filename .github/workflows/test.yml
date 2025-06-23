@@ -9,6 +9,54 @@ on:
 jobs:
   test-core:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: deasla_db
+          POSTGRES_USER: deasla_user
+          POSTGRES_PASSWORD: deasla_pass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      mongodb:
+        image: mongo:5
+        ports:
+          - 27017:27017
+
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: deasla_mysql
+          MYSQL_USER: deasla
+          MYSQL_PASSWORD: pass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      neo4j:
+        image: neo4j:4.4
+        env:
+          NEO4J_AUTH: neo4j/test
+        ports:
+          - 7474:7474
+          - 7687:7687
+
     strategy:
       matrix:
         service: [
@@ -25,16 +73,66 @@ jobs:
 
       - name: Run tests in domains/core/${{ matrix.service }}
         run: |
-         cd domains/core/${{ matrix.service }}
-         if [ -f package.json ]; then
-          npm install
-          npm install --save-dev supertest
-          npm test
-         fi
-
+          cd domains/core/${{ matrix.service }}
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+            pytest tests
+          elif [ -f package.json ]; then
+            npm install
+            npm install --save-dev supertest
+            npm test
+          fi
 
   test-alert:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: deasla_db
+          POSTGRES_USER: deasla_user
+          POSTGRES_PASSWORD: deasla_pass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      mongodb:
+        image: mongo:5
+        ports:
+          - 27017:27017
+
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: deasla_mysql
+          MYSQL_USER: deasla
+          MYSQL_PASSWORD: pass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      neo4j:
+        image: neo4j:4.4
+        env:
+          NEO4J_AUTH: neo4j/test
+        ports:
+          - 7474:7474
+          - 7687:7687
+
     strategy:
       matrix:
         service: [
@@ -51,7 +149,7 @@ jobs:
 
       - name: Run tests in domains/alert-management/${{ matrix.service }}
         run: |
-          cd domains/alert-managment/${{ matrix.service }}
+          cd domains/alert-management/${{ matrix.service }}
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
             pytest tests

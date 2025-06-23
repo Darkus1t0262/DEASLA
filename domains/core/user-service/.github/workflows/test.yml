@@ -1,19 +1,36 @@
-name: CI Test
+
+name: CI for user-service
 
 on:
   push:
-    branches: [ main ]
+    branches: [test]
   pull_request:
-    branches: [ main ]
+    branches: [test]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up node
-      uses: actions/setup-node@v1
-    - name: Install dependencies and test
-      run: |
-        echo "Running test for node in user-service"
-        npm install && npm test
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies and run tests
+        run: |
+          cd domains/core/user-service
+          npm install
+          npm test

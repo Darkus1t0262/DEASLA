@@ -1,0 +1,42 @@
+name: CI - push-service
+
+on:
+  push:
+    paths:
+      - 'domains/delivery-logging-services/push-service/**'
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:5
+        ports:
+          - 27017:27017
+        options: --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Load env variables
+        run: |
+          set -a
+          source domains/delivery-logging-services/push-service/.env
+          set +a
+
+      - name: Install dependencies
+        run: |
+          cd domains/delivery-logging-services/push-service
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          cd domains/delivery-logging-services/push-service
+          python -m unittest discover

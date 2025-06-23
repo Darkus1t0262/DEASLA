@@ -1,0 +1,41 @@
+name: CI - feedback-service
+
+on:
+  push:
+    paths:
+      - 'domains/report/feedback-service/**'
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: deasla_db
+          POSTGRES_USER: deasla_user
+          POSTGRES_PASSWORD: deasla_pass
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Load env variables
+        run: |
+          set -a
+          source domains/report/feedback-service/.env
+          set +a
+
+      - name: Run tests
+        run: |
+          cd domains/report/feedback-service
+          cargo test

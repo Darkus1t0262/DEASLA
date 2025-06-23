@@ -1,19 +1,36 @@
-name: CI Test
+
+name: CI for role-service
 
 on:
   push:
-    branches: [ main ]
+    branches: [test]
   pull_request:
-    branches: [ main ]
+    branches: [test]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up python
-      uses: actions/setup-python@v1
-    - name: Install dependencies and test
-      run: |
-        echo "Running test for python in role-service"
-        pip install -r requirements.txt && pytest
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies and run tests
+        run: |
+          cd domains/core/role-service
+          npm install
+          npm test

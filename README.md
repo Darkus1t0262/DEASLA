@@ -25,6 +25,27 @@ Logs: Centralized via logging-service
 
 Alerts via CloudWatch + Email/SMS/Push
 
+# DEAS-LA - Distributed Emergency Alert System for Latin America
+
+<!-- ─────────────────────────────  OVERVIEW DIAGRAMS  ─────────────────────────── -->
+<p align="center">
+  <!-- High & Low-level Infrastructure -->
+  <img src="docs/img/infra-high-low.png" width="800" alt="High and low level AWS infrastructure diagram">
+  <br><br>
+  <!-- Process flow -->
+  <img src="docs/img/process-diagram.png" width="800" alt="End-to-end alert processing BPMN / flowchart">
+  <br><br>
+  <!-- Software architecture (domains vs data stores) -->
+  <img src="docs/img/software-arch.png" width="600" alt="Domain-centric software architecture diagram">
+</p>
+
+> **Tip:** `width="800"` keeps big diagrams readable without blowing up the page.  
+> Adjust values or omit the attribute to let GitHub pick the native size.
+
+## 🚀 Architecture Overview
+…
+
+
 ## 🔧 Project Structure
 ```plaintext
 ├── .github/workflows

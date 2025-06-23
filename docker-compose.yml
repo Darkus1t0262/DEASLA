@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   postgres:
     image: postgres:13
@@ -12,6 +11,8 @@ services:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - deas-net
 
   mysql:
     image: mysql:5.7
@@ -26,6 +27,8 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - deas-net
 
   mongodb:
     image: mongo:5
@@ -35,6 +38,8 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - deas-net
 
   redis:
     image: redis:alpine
@@ -42,8 +47,29 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    networks:
+      - deas-net
+
+  neo4j:
+    image: neo4j:5
+    container_name: neo4j
+    restart: always
+    environment:
+      NEO4J_AUTH: neo4j/password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - deas-net
 
 volumes:
   pg_data:
   mysql_data:
   mongo_data:
+  neo4j_data:
+
+networks:
+  deas-net:
+    driver: bridge

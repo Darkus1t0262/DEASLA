@@ -1,9 +1,8 @@
 variable "vpc_id" {
-  description = "The VPC ID to launch the bastion host in"
+  description = "The ID of the VPC"
   type        = string
 }
-
-variable "public_subnet_id" {
-  description = "The public subnet to launch the bastion host in"
-  type        = string
+variable "public_subnet_ids" {
+  description = "List of public subnet IDs"
+  type        = list(string)
 }

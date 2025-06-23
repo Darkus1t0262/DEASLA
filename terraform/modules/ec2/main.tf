@@ -1,11 +1,13 @@
 resource "aws_instance" "microservice" {
-  ami           = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2
-  instance_type = "t2.micro"
-  count         = length(var.instance_name)
-  key_name      = "deas-key"  # Ensure this key pair exists
+  ami                    = "ami-0c2b8ca1dad447f8a"
+  instance_type          = "t2.micro"
+  count                  = length(var.instance_name)
+  key_name               = "deas-key"
+  subnet_id              = var.public_subnet_ids[count.index % length(var.public_subnet_ids)]
+  vpc_security_group_ids = [var.security_group_id]
 
   user_data = templatefile("${path.module}/cloud-init.sh.tpl", {
-    docker_image = var.docker_image[count.index]
+    docker_images = var.docker_images[count.index]
   })
 
   tags = {

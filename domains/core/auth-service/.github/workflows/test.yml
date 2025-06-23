@@ -1,0 +1,19 @@
+name: CI Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up node
+      uses: actions/setup-node@v1
+    - name: Install dependencies and test
+      run: |
+        echo "Running test for node in auth-service"
+        npm install && npm test

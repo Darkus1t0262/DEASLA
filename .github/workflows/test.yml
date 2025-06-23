@@ -1,0 +1,40 @@
+name: Run All Microservice Tests
+
+on:
+  push:
+    branches: [test]
+  pull_request:
+    branches: [test]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [
+          'user-service',
+          'auth-service',
+          'role-service',
+          'profile-service',
+          'language-service',
+          'geo-service',
+          'push-service',
+          'schedule-service',
+          'email-service',
+          'graphql-gateway'
+        ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run tests in ${{ matrix.service }}
+        run: |
+          cd domains/core/${{ matrix.service }}
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+            pytest tests
+          elif [ -f package.json ]; then
+            npm install
+            npm test
+          fi

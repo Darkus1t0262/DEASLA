@@ -7,6 +7,7 @@ on:
     branches: [test]
 
 jobs:
+
   test-core:
     runs-on: ubuntu-latest
     services:
@@ -17,23 +18,16 @@ jobs:
           POSTGRES_USER: deasla_user
           POSTGRES_PASSWORD: deasla_pass
         ports:
-          - 5432:5432
+          - '5432:5432'
         options: >-
           --health-cmd="pg_isready"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
+          --health-interval=10s --health-timeout=5s --health-retries=5
       mongodb:
-        image: mongo:5
-        ports:
-          - 27017:27017
-
+        image: mongo:6
+        ports: [ '27017:27017' ]
       redis:
-        image: redis:alpine
-        ports:
-          - 6379:6379
-
+        image: redis:7
+        ports: [ '6379:6379' ]
       mysql:
         image: mysql:5.7
         env:
@@ -41,37 +35,21 @@ jobs:
           MYSQL_DATABASE: deasla_mysql
           MYSQL_USER: deasla
           MYSQL_PASSWORD: pass
-        ports:
-          - 3306:3306
+        ports: [ '3306:3306' ]
         options: >-
           --health-cmd="mysqladmin ping -h localhost"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
+          --health-interval=10s --health-timeout=5s --health-retries=5
       neo4j:
         image: neo4j:4.4
         env:
           NEO4J_AUTH: neo4j/test
-        ports:
-          - 7474:7474
-          - 7687:7687
-
+        ports: [ '7474:7474', '7687:7687' ]
     strategy:
       matrix:
-        service: [
-          'user-service',
-          'auth-service',
-          'role-service',
-          'profile-service',
-          'language-service'
-        ]
-
+        service: [auth-service, language-service, profile-service, role-service, user-service]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Run tests in domains/core/${{ matrix.service }}
+      - uses: actions/checkout@v3
+      - name: Run tests
         run: |
           cd domains/core/${{ matrix.service }}
           if [ -f requirements.txt ]; then
@@ -79,11 +57,10 @@ jobs:
             pytest tests
           elif [ -f package.json ]; then
             npm install
-            npm install --save-dev supertest
             npm test
           fi
 
-  test-alert:
+  test-alert-management:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -92,24 +69,16 @@ jobs:
           POSTGRES_DB: deasla_db
           POSTGRES_USER: deasla_user
           POSTGRES_PASSWORD: deasla_pass
-        ports:
-          - 5432:5432
+        ports: [ '5432:5432' ]
         options: >-
           --health-cmd="pg_isready"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
+          --health-interval=10s --health-timeout=5s --health-retries=5
       mongodb:
-        image: mongo:5
-        ports:
-          - 27017:27017
-
+        image: mongo:6
+        ports: [ '27017:27017' ]
       redis:
-        image: redis:alpine
-        ports:
-          - 6379:6379
-
+        image: redis:7
+        ports: [ '6379:6379' ]
       mysql:
         image: mysql:5.7
         env:
@@ -117,43 +86,6 @@ jobs:
           MYSQL_DATABASE: deasla_mysql
           MYSQL_USER: deasla
           MYSQL_PASSWORD: pass
-        ports:
-          - 3306:3306
+        ports: [ '3306:3306' ]
         options: >-
-          --health-cmd="mysqladmin ping -h localhost"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
-      neo4j:
-        image: neo4j:4.4
-        env:
-          NEO4J_AUTH: neo4j/test
-        ports:
-          - 7474:7474
-          - 7687:7687
-
-    strategy:
-      matrix:
-        service: [
-          'geo-service',
-          'alert-service',
-          'schedule-service',
-          'template-service',
-          'validation-service'
-        ]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Run tests in domains/alert-management/${{ matrix.service }}
-        run: |
-          cd domains/alert-management/${{ matrix.service }}
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-            pytest tests
-          elif [ -f package.json ]; then
-            npm install
-            npm test
-          fi
+          --health-cmd="mysqladmin ping

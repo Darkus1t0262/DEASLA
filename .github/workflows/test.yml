@@ -7,7 +7,7 @@ on:
     branches: [test]
 
 jobs:
-  test:
+  test-core:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -16,7 +16,29 @@ jobs:
           'auth-service',
           'role-service',
           'profile-service',
-          'language-service',
+          'language-service'
+        ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run tests in domains/core/${{ matrix.service }}
+        run: |
+          cd domains/core/${{ matrix.service }}
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+            pytest tests
+          elif [ -f package.json ]; then
+            npm install
+            npm test
+          fi
+
+  test-alert:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [
           'geo-service',
           'alert-service',
           'schedule-service',
@@ -28,9 +50,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run tests in ${{ matrix.service }}
+      - name: Run tests in domains/alert-management/${{ matrix.service }}
         run: |
-          cd domains/core/${{ matrix.service }}
+          cd domains/alert-management/${{ matrix.service }}
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
             pytest tests

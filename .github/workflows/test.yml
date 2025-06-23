@@ -18,10 +18,10 @@ jobs:
           'profile-service',
           'language-service',
           'geo-service',
-          'push-service',
+          'alert-service',
           'schedule-service',
-          'email-service',
-          'graphql-gateway'
+          'template-service',
+          'validation-service'
         ]
 
     steps:

@@ -17,17 +17,16 @@ jobs:
           POSTGRES_DB: deasla_db
           POSTGRES_USER: deasla_user
           POSTGRES_PASSWORD: deasla_pass
-        ports:
-          - '5432:5432'
+        ports: ['5432:5432']
         options: >-
           --health-cmd="pg_isready"
           --health-interval=10s --health-timeout=5s --health-retries=5
       mongodb:
         image: mongo:6
-        ports: [ '27017:27017' ]
+        ports: ['27017:27017']
       redis:
         image: redis:7
-        ports: [ '6379:6379' ]
+        ports: ['6379:6379']
       mysql:
         image: mysql:5.7
         env:
@@ -35,7 +34,7 @@ jobs:
           MYSQL_DATABASE: deasla_mysql
           MYSQL_USER: deasla
           MYSQL_PASSWORD: pass
-        ports: [ '3306:3306' ]
+        ports: ['3306:3306']
         options: >-
           --health-cmd="mysqladmin ping -h localhost"
           --health-interval=10s --health-timeout=5s --health-retries=5
@@ -43,7 +42,7 @@ jobs:
         image: neo4j:4.4
         env:
           NEO4J_AUTH: neo4j/test
-        ports: [ '7474:7474', '7687:7687' ]
+        ports: ['7474:7474', '7687:7687']
     strategy:
       matrix:
         service: [auth-service, language-service, profile-service, role-service, user-service]
@@ -69,16 +68,16 @@ jobs:
           POSTGRES_DB: deasla_db
           POSTGRES_USER: deasla_user
           POSTGRES_PASSWORD: deasla_pass
-        ports: [ '5432:5432' ]
+        ports: ['5432:5432']
         options: >-
           --health-cmd="pg_isready"
           --health-interval=10s --health-timeout=5s --health-retries=5
       mongodb:
         image: mongo:6
-        ports: [ '27017:27017' ]
+        ports: ['27017:27017']
       redis:
         image: redis:7
-        ports: [ '6379:6379' ]
+        ports: ['6379:6379']
       mysql:
         image: mysql:5.7
         env:
@@ -86,6 +85,231 @@ jobs:
           MYSQL_DATABASE: deasla_mysql
           MYSQL_USER: deasla
           MYSQL_PASSWORD: pass
-        ports: [ '3306:3306' ]
+        ports: ['3306:3306']
         options: >-
-          --health-cmd="mysqladmin ping
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+      neo4j:
+        image: neo4j:4.4
+        env:
+          NEO4J_AUTH: neo4j/test
+        ports: ['7474:7474', '7687:7687']
+    strategy:
+      matrix:
+        service: [alert-service, geo-service, schedule-service, template-service, validation-service]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: |
+          cd domains/alert-management/${{ matrix.service }}
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+            pytest tests
+          elif [ -f package.json ]; then
+            npm install
+            npm test
+          fi
+
+  test-report:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: deasla_db
+          POSTGRES_USER: deasla_user
+          POSTGRES_PASSWORD: deasla_pass
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+      mongodb:
+        image: mongo:6
+        ports: ['27017:27017']
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: deasla_mysql
+          MYSQL_USER: deasla
+          MYSQL_PASSWORD: pass
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+      neo4j:
+        image: neo4j:4.4
+        env:
+          NEO4J_AUTH: neo4j/test
+        ports: ['7474:7474', '7687:7687']
+    strategy:
+      matrix:
+        service: [audit-trail, feedback-service, metrics-collector, report-generator, stat-analyzer]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: |
+          cd domains/report/${{ matrix.service }}
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+            pytest tests
+          elif [ -f package.json ]; then
+            npm install
+            npm test
+          fi
+
+  test-delivery-logging:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: deasla_db
+          POSTGRES_USER: deasla_user
+          POSTGRES_PASSWORD: deasla_pass
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+      mongodb:
+        image: mongo:6
+        ports: ['27017:27017']
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: deasla_mysql
+          MYSQL_USER: deasla
+          MYSQL_PASSWORD: pass
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+      neo4j:
+        image: neo4j:4.4
+        env:
+          NEO4J_AUTH: neo4j/test
+        ports: ['7474:7474', '7687:7687']
+    strategy:
+      matrix:
+        service: [email-service, logging-service, push-service, retry-service, sms-service]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: |
+          cd domains/delivery-logging-services/${{ matrix.service }}
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+            pytest tests
+          elif [ -f package.json ]; then
+            npm install
+            npm test
+          fi
+
+  test-external:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: deasla_db
+          POSTGRES_USER: deasla_user
+          POSTGRES_PASSWORD: deasla_pass
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+      mongodb:
+        image: mongo:6
+        ports: ['27017:27017']
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: deasla_mysql
+          MYSQL_USER: deasla
+          MYSQL_PASSWORD: pass
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+      neo4j:
+        image: neo4j:4.4
+        env:
+          NEO4J_AUTH: neo4j/test
+        ports: ['7474:7474', '7687:7687']
+    strategy:
+      matrix:
+        service: [channel-validator, external-push, graphql-gateway, soap-consumer, webhook-service]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: |
+          cd domains/external/${{ matrix.service }}
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+            pytest tests
+          elif [ -f package.json ]; then
+            npm install
+            npm test
+          fi
+
+  test-notification:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: deasla_db
+          POSTGRES_USER: deasla_user
+          POSTGRES_PASSWORD: deasla_pass
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+      mongodb:
+        image: mongo:6
+        ports: ['27017:27017']
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: deasla_mysql
+          MYSQL_USER: deasla
+          MYSQL_PASSWORD: pass
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+      neo4j:
+        image: neo4j:4.4
+        env:
+          NEO4J_AUTH: neo4j/test
+        ports: ['7474:7474', '7687:7687']
+    strategy:
+      matrix:
+        service: [broadcast-service, channel-service, notification-core, retry-engine, socket-service]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: |
+          cd domains/notification/${{ matrix.service }}
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+            pytest tests
+          elif [ -f package.json ]; then
+            npm install
+            npm test
+          fi

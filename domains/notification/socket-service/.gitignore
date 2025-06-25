@@ -1,0 +1,4 @@
+/socket-service
+*.exe
+*.log
+vendor/

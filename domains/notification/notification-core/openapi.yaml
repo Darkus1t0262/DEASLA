@@ -1,0 +1,37 @@
+openapi: 3.0.0
+info:
+  title: Notification Core Service
+  version: 1.0.0
+paths:
+  /api/notification/send:
+    post:
+      summary: Send notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationResponse'
+components:
+  schemas:
+    NotificationRequest:
+      type: object
+      properties:
+        recipient:
+          type: string
+        content:
+          type: string
+    NotificationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        detail:
+          type: string

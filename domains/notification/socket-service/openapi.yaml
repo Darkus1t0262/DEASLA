@@ -1,0 +1,17 @@
+openapi: 3.0.0
+info:
+  title: Socket Service
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+  /ws:
+    get:
+      summary: WebSocket endpoint
+      responses:
+        '101':
+          description: Switching Protocols (WebSocket Upgrade)

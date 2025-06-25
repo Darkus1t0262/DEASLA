@@ -1,0 +1,39 @@
+openapi: 3.0.0
+info:
+  title: Channel Service
+  version: 1.0.0
+paths:
+  /api/channel/route:
+    post:
+      summary: Route channel message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelResponse'
+components:
+  schemas:
+    ChannelRequest:
+      type: object
+      properties:
+        channel_type:
+          type: string
+        payload:
+          type: string
+    ChannelResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        routed:
+          type: string
+        detail:
+          type: string

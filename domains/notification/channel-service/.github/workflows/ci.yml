@@ -18,4 +18,4 @@ jobs:
       - name: Build
         run: go build -v ./cmd/main.go
       - name: Run tests
-        run: echo "No tests yet"
+        run: go test ./test/...

@@ -1,0 +1,4 @@
+/channel-service
+*.exe
+*.log
+vendor/

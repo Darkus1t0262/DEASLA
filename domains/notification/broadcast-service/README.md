@@ -1,6 +1,24 @@
-## broadcast-service
+# broadcast-service
 
-Handles mass alert broadcast logic.
+**Domain:** Notification  
+**Language:** Go  
+**Framework:** Gin  
+**Architecture Style:** REST API  
 
-- **Port**: 4101
-- **Language**: Python
+## Description
+Handles mass broadcasting of alerts/messages.  
+POST `/api/broadcast/send`
+
+## Endpoints
+
+- `GET /health`
+- `POST /api/broadcast/send`
+
+## Build & Run
+
+```bash
+go mod tidy
+go run ./cmd/main.go
+# Or with Docker:
+docker build -t broadcast-service .
+docker run -p 4101:4101 broadcast-service

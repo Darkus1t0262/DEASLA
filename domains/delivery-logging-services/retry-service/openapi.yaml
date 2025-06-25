@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  title: Retry Service
+  version: 1.0.0
+paths:
+  /api/retry/:
+    post:
+      summary: Retry message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetryRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetryResponse'
+    get:
+      summary: List retry statuses
+      responses:
+        '200':
+          description: List of retry statuses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetryListResponse'
+components:
+  schemas:
+    RetryRequest:
+      type: object
+      properties:
+        message_id:
+          type: string
+        payload:
+          type: object
+      required:
+        - message_id
+        - payload
+    RetryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        detail:
+          type: string
+    RetryStatus:
+      type: object
+      properties:
+        message_id:
+          type: string
+        retries:
+          type: integer
+        status:
+          type: string
+    RetryListResponse:
+      type: object
+      properties:
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/RetryStatus'

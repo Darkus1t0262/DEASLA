@@ -1,0 +1,46 @@
+
+---
+
+### **broadcast-service/openapi.yaml**
+```yaml
+openapi: 3.0.0
+info:
+  title: Broadcast Service
+  version: 1.0.0
+paths:
+  /api/broadcast/send:
+    post:
+      summary: Send broadcast
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BroadcastRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BroadcastResponse'
+components:
+  schemas:
+    BroadcastRequest:
+      type: object
+      properties:
+        message:
+          type: string
+        recipients:
+          type: array
+          items:
+            type: string
+    BroadcastResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        delivered:
+          type: integer
+        detail:
+          type: string

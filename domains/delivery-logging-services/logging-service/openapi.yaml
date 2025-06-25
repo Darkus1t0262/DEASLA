@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: Logging Service
+  version: 1.0.0
+paths:
+  /api/logs/:
+    post:
+      summary: Store log entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogResponse'
+    get:
+      summary: List all logs
+      responses:
+        '200':
+          description: List of logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogListResponse'
+components:
+  schemas:
+    LogRequest:
+      type: object
+      properties:
+        service:
+          type: string
+        message:
+          type: string
+      required:
+        - service
+        - message
+    LogEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        timestamp:
+          type: string
+        service:
+          type: string
+        message:
+          type: string
+    LogResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        log:
+          $ref: '#/components/schemas/LogEntry'
+    LogListResponse:
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogEntry'

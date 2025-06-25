@@ -1,16 +1,15 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-
-async fn index() -> impl Responder {
-    HttpResponse::Ok().body("Hello from feedback-service!")
-}
+mod handler;
+use actix_web::{App, HttpServer, web};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Starting feedback-service on port 3000...");
     HttpServer::new(|| {
-        App::new().route("/", web::get().to(index))
+        App::new()
+            .route("/health", web::get().to(handler::health))
+            .route("/api/feedback", web::post().to(handler::submit_feedback))
+            .route("/api/feedbacks", web::get().to(handler::list_feedbacks))
     })
-    .bind("0.0.0.0:3000")?
+    .bind(("0.0.0.0", 4202))?
     .run()
     .await
 }

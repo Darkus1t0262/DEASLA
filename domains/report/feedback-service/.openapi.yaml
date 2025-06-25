@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: Feedback Service
+  version: 1.0.0
+paths:
+  /api/feedback:
+    post:
+      summary: Submit feedback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackRequest'
+      responses:
+        '200':
+          description: Created feedback
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feedback'
+  /api/feedbacks:
+    get:
+      summary: List feedbacks
+      responses:
+        '200':
+          description: List of feedbacks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Feedback'
+components:
+  schemas:
+    FeedbackRequest:
+      type: object
+      properties:
+        user:
+          type: string
+        comment:
+          type: string
+    Feedback:
+      type: object
+      properties:
+        id:
+          type: integer
+        user:
+          type: string
+        comment:
+          type: string
+        timestamp:
+          type: string

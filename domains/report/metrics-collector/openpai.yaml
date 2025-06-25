@@ -1,0 +1,52 @@
+openapi: 3.0.0
+info:
+  title: Metrics Collector Service
+  version: 1.0.0
+paths:
+  /api/metrics:
+    post:
+      summary: Add metric
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetricRequest'
+      responses:
+        '200':
+          description: Created metric
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metric'
+    get:
+      summary: List metrics
+      responses:
+        '200':
+          description: List of metrics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Metric'
+components:
+  schemas:
+    MetricRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: number
+    Metric:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        value:
+          type: number
+        timestamp:
+          type: string

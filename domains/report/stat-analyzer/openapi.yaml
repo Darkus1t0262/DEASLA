@@ -1,0 +1,41 @@
+openapi: 3.0.0
+info:
+  title: Stat Analyzer Service
+  version: 1.0.0
+paths:
+  /api/analyze:
+    post:
+      summary: Analyze dataset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatRequest'
+      responses:
+        '200':
+          description: Statistics calculated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatResponse'
+components:
+  schemas:
+    StatRequest:
+      type: object
+      properties:
+        dataset:
+          type: array
+          items:
+            type: number
+    StatResponse:
+      type: object
+      properties:
+        mean:
+          type: number
+        min:
+          type: number
+        max:
+          type: number
+        count:
+          type: integer

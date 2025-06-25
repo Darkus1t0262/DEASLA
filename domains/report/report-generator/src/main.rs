@@ -1,16 +1,14 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-
-async fn index() -> impl Responder {
-    HttpResponse::Ok().body("Hello from report-generator!")
-}
+mod handler;
+use actix_web::{App, HttpServer, web};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Starting report-generator on port 3000...");
     HttpServer::new(|| {
-        App::new().route("/", web::get().to(index))
+        App::new()
+            .route("/health", web::get().to(handler::health))
+            .route("/api/report", web::post().to(handler::generate_report))
     })
-    .bind("0.0.0.0:3000")?
+    .bind(("0.0.0.0", 4204))?
     .run()
     .await
 }

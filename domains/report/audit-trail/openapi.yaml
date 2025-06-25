@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: Audit Trail Service
+  version: 1.0.0
+paths:
+  /api/audit/log:
+    post:
+      summary: Log action
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogRequest'
+      responses:
+        '200':
+          description: Created log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLog'
+  /api/audit/logs:
+    get:
+      summary: List logs
+      responses:
+        '200':
+          description: Logs list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLog'
+components:
+  schemas:
+    LogRequest:
+      type: object
+      properties:
+        actor:
+          type: string
+        action:
+          type: string
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        actor:
+          type: string
+        action:
+          type: string
+        timestamp:
+          type: string

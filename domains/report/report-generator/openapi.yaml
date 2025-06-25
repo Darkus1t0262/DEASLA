@@ -1,0 +1,37 @@
+openapi: 3.0.0
+info:
+  title: Report Generator Service
+  version: 1.0.0
+paths:
+  /api/report:
+    post:
+      summary: Generate report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+      responses:
+        '200':
+          description: Report generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
+components:
+  schemas:
+    ReportRequest:
+      type: object
+      properties:
+        kind:
+          type: string
+        filter:
+          type: string
+    ReportResponse:
+      type: object
+      properties:
+        filename:
+          type: string
+        content:
+          type: string

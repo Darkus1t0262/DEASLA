@@ -1,16 +1,15 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-
-async fn index() -> impl Responder {
-    HttpResponse::Ok().body("Hello from audit-trail!")
-}
+mod handler;
+use actix_web::{App, HttpServer, web};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Starting audit-trail on port 3000...");
     HttpServer::new(|| {
-        App::new().route("/", web::get().to(index))
+        App::new()
+            .route("/health", web::get().to(handler::health))
+            .route("/api/audit/log", web::post().to(handler::log_action))
+            .route("/api/audit/logs", web::get().to(handler::list_logs))
     })
-    .bind("0.0.0.0:3000")?
+    .bind(("0.0.0.0", 4201))?
     .run()
     .await
 }

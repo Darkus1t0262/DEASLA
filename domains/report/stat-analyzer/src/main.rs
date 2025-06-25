@@ -1,16 +1,14 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-
-async fn index() -> impl Responder {
-    HttpResponse::Ok().body("Hello from stat-analyzer!")
-}
+mod handler;
+use actix_web::{App, HttpServer, web};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Starting stat-analyzer on port 3000...");
     HttpServer::new(|| {
-        App::new().route("/", web::get().to(index))
+        App::new()
+            .route("/health", web::get().to(handler::health))
+            .route("/api/analyze", web::post().to(handler::analyze_stats))
     })
-    .bind("0.0.0.0:3000")?
+    .bind(("0.0.0.0", 4205))?
     .run()
     .await
 }

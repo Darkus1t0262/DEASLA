@@ -1,16 +1,15 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-
-async fn index() -> impl Responder {
-    HttpResponse::Ok().body("Hello from metrics-collector!")
-}
+mod handler;
+use actix_web::{App, HttpServer, web};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Starting metrics-collector on port 3000...");
     HttpServer::new(|| {
-        App::new().route("/", web::get().to(index))
+        App::new()
+            .route("/health", web::get().to(handler::health))
+            .route("/api/metrics", web::post().to(handler::add_metric))
+            .route("/api/metrics", web::get().to(handler::list_metrics))
     })
-    .bind("0.0.0.0:3000")?
+    .bind(("0.0.0.0", 4203))?
     .run()
     .await
 }

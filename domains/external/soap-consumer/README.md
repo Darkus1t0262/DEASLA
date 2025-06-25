@@ -1,6 +1,20 @@
-## soap-consumer
+# soap-consumer
 
-Consumes external SOAP web services.
+**Domain:** External  
+**Language:** Python  
+**Framework:** FastAPI  
+**API Style:** SOAP-like endpoint (REST for demo)  
 
-- **Port**: 4002
-- **Language**: Python
+## Description
+Handles SOAP-based integration with external systems.
+
+## Endpoints
+
+- `GET /` Health check
+- `POST /api/soap/` SOAP action
+
+## Build & Run
+
+```bash
+docker build -t soap-consumer .
+docker run -p 4002:4002 soap-consumer

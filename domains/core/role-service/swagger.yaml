@@ -1,59 +1,80 @@
 openapi: 3.0.0
 info:
   title: Role Service API
-  version: 1.0.0
-  description: API to manage roles in the DEAS-LA system
-
+  version: "1.0"
+  description: REST API for role management
 servers:
-  - url: http://localhost:3003
-
+  - url: http://localhost:3006
 paths:
-  /roles:
+  /api/roles:
     get:
       summary: Get all roles
-      tags: [Roles]
       responses:
-        '200':
-          description: A list of roles
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Role'
-
+        "200":
+          description: List of roles
     post:
-      summary: Create a new role
-      tags: [Roles]
+      summary: Create a role
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoleInput'
+              $ref: '#/components/schemas/Role'
       responses:
-        '201':
-          description: Created role
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Role'
-
+        "201":
+          description: Role created
+  /api/roles/{name}:
+    get:
+      summary: Get role by name
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Role found
+        "404":
+          description: Not found
+    put:
+      summary: Update role description
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        "200":
+          description: Role updated
+        "404":
+          description: Not found
+    delete:
+      summary: Delete role
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
 components:
   schemas:
     Role:
       type: object
       properties:
-        id:
-          type: string
         name:
           type: string
-          example: "admin"
-
-    RoleInput:
-      type: object
-      required:
-        - name
-      properties:
-        name:
+        description:
           type: string

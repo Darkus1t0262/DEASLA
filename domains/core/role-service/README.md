@@ -1,62 +1,41 @@
-# 🛡️ Role Service - Core Domain
+# Role Service
 
-The **Role Service** is part of the `core` domain in the DEAS-LA emergency alert system. It manages user roles and permissions to enable secure access control across all domains.
+**Domain:** Core  
+**Tech:** Node.js, Express, Neo4j, REST  
+**Design Patterns:** Repository, Singleton
 
-## 📌 Overview
-- **Domain**: Core
-- **Language**: Node.js
-- **Architecture Style**: REST API
-- **Database**: MongoDB
-- **Libraries**: Express.js, Mongoose, JWT, dotenv
+## Overview
 
-## 🔍 What This Microservice Does
-- Defines roles such as `admin`, `responder`, `analyst`, and `citizen`
-- Provides APIs to assign roles to users
-- Offers endpoints to retrieve, update, or revoke roles
-- Validates and resolves roles during auth/token processes
-- Works alongside `auth-service` to enforce access control policies
+This service manages user roles for DEAS-LA.  
+It uses Neo4j as a graph DB and implements Repository and Singleton patterns.
 
-## ⚙️ How It Works
-- Provides REST endpoints at `/roles`
-- MongoDB stores role documents and user-role mappings
-- Validates data with Mongoose schemas
-- Returns role details to `auth-service` for inclusion in JWT payload
-- Publishes access control changes via Kafka for event-driven sync
+## Endpoints
 
-## ✅ QA/PROD Compliance
-| Feature                           | Implemented |
-|-----------------------------------|-------------|
-| RESTful architecture              | ✅          |
-| MongoDB integration               | ✅          |
-| Dockerized container              | ✅          |
-| CI/CD with GitHub Actions         | ✅          |
-| Role-based access control (RBAC)  | ✅          |
-| Kafka event publication           | ✅          |
-| Unit and functional tests         | ✅          |
-| Logging via Prometheus/CloudWatch | ✅          |
+- `GET /api/roles` — List all roles
+- `POST /api/roles` — Create role
+- `GET /api/roles/:name` — Get role by name
+- `PUT /api/roles/:name` — Update role description
+- `DELETE /api/roles/:name` — Delete role
 
----
+## How It Works
 
-## Available endpoints:
+- **Singleton pattern:** Ensures only one Neo4j driver instance is used.
+- **Repository pattern:** Encapsulates all DB logic in a dedicated repository.
+- **Swagger docs:** See `swagger.yaml`.
+- **Unit tests:** Run with `npm test` (Jest).
 
-GET /roles
+## CI/CD
 
-POST /roles
+Automated tests with GitHub Actions in .github/workflows/ci.yml
 
-PUT /roles/:id
+## Run Locally
 
-DELETE /roles/:id
-
---- 
-
-## 🔄 Dependencies
-auth-service: requests role metadata to embed in JWT
-
-user-service: applies role assignments to registered users
-
----
-
-## 🚀 How to Run
 ```bash
-docker build -t core-role-service .
-docker run -p 3003:3003 core-role-service
+npm install
+cp .env.example .env # Edit Neo4j URI, user, password
+npm start
+
+# Docker
+
+docker build -t role-service .
+docker run --env-file .env -p 3006:3006 role-service

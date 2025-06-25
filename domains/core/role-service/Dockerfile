@@ -1,18 +1,12 @@
-# Base image
-FROM node:18
+FROM node:20-alpine
 
-# Working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy source
 COPY . .
 
-# Expose API port
-EXPOSE 3003
+EXPOSE 3006
 
-# Start command
 CMD ["npm", "start"]

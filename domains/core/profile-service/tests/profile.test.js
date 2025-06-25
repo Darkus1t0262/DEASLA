@@ -1,14 +1,49 @@
 const request = require('supertest');
-const express = require('express');
-const userRoutes = require('../src/routes/userRoutes');
+const app = require('../src/app');
+const mongoose = require('mongoose');
 
-const app = express();
-app.use('/api/profiles', userRoutes);
+beforeAll(async () => {
+    await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+});
 
-describe('GET /api/profiles', () => {
-  it('should return list of users', async () => {
-    const res = await request(app).get('/api/profiles');
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.length).toBeGreaterThan(0);
-  });
+afterAll(async () => {
+    await mongoose.connection.close();
+});
+
+describe('Profile API', () => {
+    let id;
+
+    test('creates a profile', async () => {
+        const res = await request(app)
+            .post('/api/profiles')
+            .send({ userId: 'user123', fullName: 'Test User', phone: '555-1234' });
+        expect(res.statusCode).toBe(201);
+        expect(res.body.fullName).toBe('Test User');
+        id = res.body._id;
+    });
+
+    test('gets all profiles', async () => {
+        const res = await request(app).get('/api/profiles');
+        expect(res.statusCode).toBe(200);
+        expect(Array.isArray(res.body)).toBe(true);
+    });
+
+    test('gets a profile by id', async () => {
+        const res = await request(app).get(`/api/profiles/${id}`);
+        expect(res.statusCode).toBe(200);
+        expect(res.body._id).toBe(id);
+    });
+
+    test('updates a profile', async () => {
+        const res = await request(app)
+            .put(`/api/profiles/${id}`)
+            .send({ fullName: 'Updated Name', phone: '555-5678' });
+        expect(res.statusCode).toBe(200);
+        expect(res.body.fullName).toBe('Updated Name');
+    });
+
+    test('deletes a profile', async () => {
+        const res = await request(app).delete(`/api/profiles/${id}`);
+        expect(res.statusCode).toBe(204);
+    });
 });

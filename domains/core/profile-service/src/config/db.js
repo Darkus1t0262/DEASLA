@@ -1,9 +1,12 @@
-const { Pool } = require('pg');
-const pool = new Pool({
-  host: process.env.POSTGRES_HOST,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
-  port: process.env.POSTGRES_PORT,
-});
-module.exports = pool;
+const mongoose = require('mongoose');
+
+let isConnected = false;
+
+async function connectDB() {
+    if (isConnected) return;
+    await mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    isConnected = true;
+    console.log('MongoDB connected!');
+}
+
+module.exports = { connectDB };

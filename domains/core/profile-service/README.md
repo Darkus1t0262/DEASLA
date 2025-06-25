@@ -1,53 +1,41 @@
-# 👤 Profile Service - Core Domain
+# Profile Service
 
-The **Profile Service** manages extended user metadata in the DEAS-LA system. It links user identities to preferences, regional settings, device information, and other non-authentication-related data.
+**Domain:** Core  
+**Tech:** Node.js, Express, MongoDB, REST  
+**Design Patterns:** Repository, Singleton
 
-## 📌 Overview
-- **Domain**: Core
-- **Language**: Node.js
-- **Architecture Style**: REST API
-- **Database**: MongoDB
-- **Libraries**: Express.js, Mongoose, JWT, dotenv
+## Overview
 
-## 🔍 What This Microservice Does
-- Stores user profile information such as:
-  - Name, contact details, photo URL
-  - Preferred language and region
-  - Device and platform metadata
-- Enables update and retrieval of user profiles
-- Links to `user-service` for identity mapping
-- Supports region-based filtering and segmentation
+This service manages user profiles for DEAS-LA.  
+Follows Repository and Singleton patterns for maintainability and scalability.
 
-## ⚙️ How It Works
-- RESTful endpoints exposed at `/profiles`
-- Connects to MongoDB using Mongoose
-- Uses middleware for JWT token validation
-- Sends logs to Prometheus and AWS CloudWatch
+## Endpoints
 
-## ✅ QA/PROD Compliance
-| Feature                             | Implemented |
-|-------------------------------------|-------------|
-| RESTful architecture                | ✅          |
-| MongoDB integration                 | ✅          |
-| Dockerized container                | ✅          |
-| CI/CD pipeline with GitHub Actions  | ✅          |
-| JWT Middleware for auth             | ✅          |
-| CORS + HTTPS enforced               | ✅          |
-| Functional + unit testing           | ✅          |
-| Logging and monitoring              | ✅          |
+- `GET /api/profiles` — List all profiles
+- `POST /api/profiles` — Create profile
+- `GET /api/profiles/:id` — Get profile by ID
+- `PUT /api/profiles/:id` — Update profile
+- `DELETE /api/profiles/:id` — Delete profile
 
-API base URL: http://localhost:3005/profiles
+## How It Works
 
---- 
+- **Singleton pattern:** Ensures only one MongoDB connection instance is used.
+- **Repository pattern:** Encapsulates all DB logic in a dedicated repository.
+- **Swagger docs:** See `swagger.yaml`.
+- **Unit tests:** Run with `npm test` (Jest).
 
-## 🔄 Dependencies
-user-service: provides unique user IDs to link profiles
+## CI/CD
 
-language-service: fetches preferred language
+Automated tests with GitHub Actions in .github/workflows/ci.yml
 
-role-service: can enrich user context for dashboard displays
+## Run Locally
 
-## 🚀 How to Run
 ```bash
-docker build -t core-profile-service .
-docker run -p 3005:3005 core-profile-service
+npm install
+cp .env.example .env # Edit Mongo URI as needed
+npm start
+
+# Docker
+
+docker build -t profile-service .
+docker run --env-file .env -p 3003:3003 profile-service

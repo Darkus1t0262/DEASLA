@@ -1,45 +1,41 @@
-# 🌐 Language Service - Core Domain
+# Language Service
 
-The **Language Service** belongs to the `core` domain of the DEAS-LA system. It manages supported languages across the platform to ensure multilingual support for alert messages and UI components.
+**Domain:** Core  
+**Tech:** Node.js, Express, MongoDB, REST  
+**Design Patterns:** Repository, Singleton
 
-## 📌 Overview
-- **Domain**: Core
-- **Language**: Node.js
-- **Architecture Style**: REST API
-- **Database**: MySQL
-- **Libraries**: Express.js, Sequelize, dotenv, Swagger
+## Overview
 
-## 🔍 What This Microservice Does
-- Stores available languages (e.g., Spanish, English, Portuguese)
-- Provides language metadata and codes to all services
-- Supports CRUD operations for language entries
-- Enables localization for notifications and frontends
+This service manages supported languages for DEAS-LA (for localization, internationalization, etc).
+Implements Repository and Singleton patterns for maintainability and testability.
 
-## ⚙️ How It Works
-- Exposes endpoints at `/languages`
-- Connects to MySQL via Sequelize
-- Includes Swagger for API documentation
-- Sends logs to Prometheus and AWS CloudWatch
+## Endpoints
 
-## ✅ QA/PROD Compliance
-| Feature                             | Implemented |
-|-------------------------------------|-------------|
-| RESTful architecture                | ✅          |
-| MySQL integration                   | ✅          |
-| Dockerized container                | ✅          |
-| Swagger documentation               | ✅          |
-| CI/CD pipeline via GitHub Actions   | ✅          |
-| Logging with Prometheus/CloudWatch  | ✅          |
-| Functional + unit test coverage     | ✅          |
+- `GET /api/languages` — List all languages
+- `POST /api/languages` — Create language
+- `GET /api/languages/:id` — Get language by ID
+- `PUT /api/languages/:id` — Update language
+- `DELETE /api/languages/:id` — Delete language
 
-API available at http://localhost:3004/languages
+## How It Works
 
-## 🔄 Dependencies
-profile-service: links preferred language to user profile
+- **Singleton pattern:** Ensures only one MongoDB connection instance is used.
+- **Repository pattern:** Encapsulates all DB logic in a dedicated repository.
+- **Swagger docs:** See `swagger.yaml`.
+- **Unit tests:** Run with `npm test` (Jest).
 
-notification-service: retrieves language for content translation
+## CI/CD
 
-## 🚀 How to Run
+Automated tests with GitHub Actions in .github/workflows/ci.yml
+
+## Run Locally
+
 ```bash
-docker build -t core-language-service .
-docker run -p 3004:3004 core-language-service
+npm install
+cp .env.example .env # Edit Mongo URI as needed
+npm start
+
+# Docker
+
+docker build -t language-service .
+docker run --env-file .env -p 3005:3005 language-service

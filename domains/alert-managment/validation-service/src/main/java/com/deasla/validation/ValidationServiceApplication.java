@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ValidationService {
+public class ValidationServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ValidationService.class, args);
+        SpringApplication.run(ValidationServiceApplication.class, args);
     }
 }

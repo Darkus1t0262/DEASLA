@@ -1,11 +1,5 @@
-# Build Stage
-FROM maven:3.9.2-eclipse-temurin-17 AS builder
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
-COPY . .
-RUN mvn clean package -DskipTests
-
-# Run Stage
-FROM openjdk:17
-WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+COPY target/geo-service-1.0.0.jar app.jar
+EXPOSE 8082
+ENTRYPOINT ["java", "-jar", "app.jar"]

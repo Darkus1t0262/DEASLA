@@ -1,0 +1,86 @@
+openapi: 3.0.0
+info:
+  title: Template Service API
+  version: "1.0"
+  description: REST API for managing alert templates
+servers:
+  - url: http://localhost:8083
+paths:
+  /api/templates:
+    get:
+      summary: Get all templates
+      responses:
+        "200":
+          description: List of templates
+    post:
+      summary: Create a template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Template'
+      responses:
+        "201":
+          description: Template created
+  /api/templates/{id}:
+    get:
+      summary: Get template by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Template found
+        "404":
+          description: Not found
+    put:
+      summary: Update template
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Template'
+      responses:
+        "200":
+          description: Template updated
+        "404":
+          description: Not found
+    delete:
+      summary: Delete template
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+components:
+  schemas:
+    Template:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        variables:
+          type: string

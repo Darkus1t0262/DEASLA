@@ -1,11 +1,59 @@
 openapi: 3.0.0
 info:
-  title: Role Service
+  title: Role Service API
   version: 1.0.0
+  description: API to manage roles in the DEAS-LA system
+
+servers:
+  - url: http://localhost:3003
+
 paths:
-  /api/users:
+  /roles:
     get:
-      summary: Get all users
+      summary: Get all roles
+      tags: [Roles]
       responses:
         '200':
-          description: Successful response
+          description: A list of roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+
+    post:
+      summary: Create a new role
+      tags: [Roles]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleInput'
+      responses:
+        '201':
+          description: Created role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+
+components:
+  schemas:
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: "admin"
+
+    RoleInput:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string

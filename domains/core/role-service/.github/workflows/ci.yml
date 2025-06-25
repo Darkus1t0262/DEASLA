@@ -1,20 +1,32 @@
-name: Node.js CI
+name: CI - Role Service
 
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "test" ]
+    paths:
+      - 'core/role-service/**'
   pull_request:
-    branches: [ "main" ]
+    paths:
+      - 'core/role-service/**'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: core/role-service
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
-      - run: npm install
-      - run: npm test
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test

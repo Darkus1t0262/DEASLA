@@ -1,14 +1,18 @@
-const request = require('supertest');
-const express = require('express');
-const userRoutes = require('../src/routes/userRoutes');
+const request = require("supertest");
+const app = require("../src/index");
 
-const app = express();
-app.use('/api/languages', userRoutes);
+describe("Language Service", () => {
+  it("should return all languages", async () => {
+    const res = await request(app).get("/languages");
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
 
-describe('GET /api/languages', () => {
-  it('should return list of users', async () => {
-    const res = await request(app).get('/api/languages');
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.length).toBeGreaterThan(0);
+  it("should create a new language", async () => {
+    const res = await request(app)
+      .post("/languages")
+      .send({ code: "es", name: "Spanish" });
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty("code", "es");
   });
 });

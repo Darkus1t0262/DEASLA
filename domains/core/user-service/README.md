@@ -1,52 +1,41 @@
-# 🧩 User Service - Core Domain
+# User Service
 
-The **User Service** is part of the `core` domain in the DEAS-LA system. It is responsible for managing user data including registration, updates, and internal user operations for administrators and alert responders.
+**Domain:** Core  
+**Tech:** Node.js, Express, PostgreSQL, REST  
+**Design Patterns:** Repository, Singleton
 
-## 📌 Overview
-- **Domain**: Core
-- **Language**: Node.js
-- **Architecture Style**: REST API
-- **Database**: PostgreSQL
-- **Libraries**: Express.js, Sequelize, JWT, CORS, Bcrypt
+## Overview
 
-## 🔍 What This Microservice Does
-- Creates and manages user accounts
-- Handles user data updates and deletions
-- Provides user lookup and query endpoints
-- Integrates with `auth-service` and `role-service` for user permissions
+This service manages user entities for DEAS-LA.  
+Follows Repository and Singleton patterns for maintainability and scalability.
 
-## ⚙️ How It Works
-- Exposes RESTful routes (`/users`)
-- Uses Sequelize ORM to interact with a PostgreSQL DB
-- Validates input and performs CRUD operations
-- JWT tokens are decoded to associate user permissions
-- Logs are sent to Prometheus and AWS CloudWatch
-- Secured by HTTPS, JWT, and CORS policies
+## Endpoints
 
-## ✅ QA/PROD Compliance
-| Feature                          | Implemented |
-|----------------------------------|-------------|
-| RESTful architecture             | ✅          |
-| PostgreSQL integration           | ✅          |
-| Dockerized container             | ✅          |
-| CI/CD pipeline via GitHub        | ✅          |
-| Unit and functional tests        | ✅          |
-| JWT + CORS security              | ✅          |
-| CloudWatch and Prometheus logs  | ✅          |
+- `GET /api/users` — List all users
+- `POST /api/users` — Create user
+- `GET /api/users/:id` — Get user by ID
+- `PUT /api/users/:id` — Update user
+- `DELETE /api/users/:id` — Delete user
 
-API available at http://localhost:3001/users
+## How It Works
 
----
-## 🔄 Dependencies
-auth-service: for token validation
+- **Singleton pattern:** Ensures only one DB connection instance is used.
+- **Repository pattern:** Encapsulates all DB logic in a dedicated repository.
+- **Swagger docs:** See `swagger.yaml`.
+- **Unit tests:** Run with `npm test` (Jest).
 
-role-service: for access control
+## CI/CD
 
-profile-service: for enriched profile info
+Automated tests with GitHub Actions in .github/workflows/ci.yml
 
---- 
+## Run Locally
 
-## 🚀 How to Run
 ```bash
-docker build -t core-user-service .
-docker run -p 3001:3001 core-user-service
+npm install
+cp .env.example .env # Edit DB credentials
+npm start
+
+# Docker
+
+docker build -t user-service .
+docker run --env-file .env -p 3002:3002 user-service

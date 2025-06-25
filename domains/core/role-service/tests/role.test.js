@@ -1,14 +1,18 @@
-const request = require('supertest');
-const express = require('express');
-const userRoutes = require('../src/routes/userRoutes');
+const request = require("supertest");
+const app = require("../src/index"); // Ensure app is exported from index.js
 
-const app = express();
-app.use('/api/roles', userRoutes);
+describe("Role Service", () => {
+  it("should return all roles", async () => {
+    const res = await request(app).get("/roles");
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
 
-describe('GET /api/roles', () => {
-  it('should return list of users', async () => {
-    const res = await request(app).get('/api/roles');
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.length).toBeGreaterThan(0);
+  it("should create a new role", async () => {
+    const res = await request(app)
+      .post("/roles")
+      .send({ name: "responder" });
+    expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty("name", "responder");
   });
 });

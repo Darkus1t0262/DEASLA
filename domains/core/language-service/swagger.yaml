@@ -1,11 +1,65 @@
 openapi: 3.0.0
 info:
-  title: Language Service
+  title: Language Service API
   version: 1.0.0
+  description: API for managing supported languages and localization settings
+
+servers:
+  - url: http://localhost:3004
+
 paths:
-  /api/users:
+  /languages:
     get:
-      summary: Get all users
+      summary: Get all supported languages
+      tags: [Languages]
       responses:
         '200':
-          description: Successful response
+          description: List of languages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Language'
+
+    post:
+      summary: Add a new language
+      tags: [Languages]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LanguageInput'
+      responses:
+        '201':
+          description: Language created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Language'
+
+components:
+  schemas:
+    Language:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+          example: en
+        name:
+          type: string
+          example: English
+
+    LanguageInput:
+      type: object
+      required:
+        - code
+        - name
+      properties:
+        code:
+          type: string
+        name:
+          type: string

@@ -1,14 +1,32 @@
 const request = require('supertest');
-const express = require('express');
-const userRoutes = require('../src/routes/userRoutes');
+const app = require('../src/app');
+const { sequelize } = require('../src/config/db');
 
-const app = express();
-app.use('/api/auths', userRoutes);
+beforeAll(async () => {
+    await sequelize.sync({ force: true });
+});
 
-describe('GET /api/auths', () => {
-  it('should return list of users', async () => {
-    const res = await request(app).get('/api/auths');
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.length).toBeGreaterThan(0);
-  });
+afterAll(async () => {
+    await sequelize.close();
+});
+
+describe('Auth API', () => {
+    test('registers a user', async () => {
+        const res = await request(app)
+            .post('/api/auth/register')
+            .send({ username: 'testuser', password: 'testpass' });
+        expect(res.statusCode).toBe(201);
+        expect(res.body.username).toBe('testuser');
+    });
+
+    test('logs in a user', async () => {
+        await request(app)
+            .post('/api/auth/register')
+            .send({ username: 'loginuser', password: 'loginpass' });
+        const res = await request(app)
+            .post('/api/auth/login')
+            .send({ username: 'loginuser', password: 'loginpass' });
+        expect(res.statusCode).toBe(200);
+        expect(res.body.token).toBeDefined();
+    });
 });

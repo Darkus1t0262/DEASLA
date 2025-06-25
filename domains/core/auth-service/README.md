@@ -1,54 +1,49 @@
-# 🔐 Auth Service - Core Domain
+# Auth Service
 
-The **Auth Service** is part of the `core` domain in the DEAS-LA distributed emergency alert system. It handles user authentication, token generation, and session management using secure, stateless mechanisms.
+**Domain:** Core  
+**Tech:** Node.js, Express, PostgreSQL, JWT, REST  
+**Design Patterns:** Repository, Singleton
 
-## 📌 Overview
-- **Domain**: Core
-- **Language**: Node.js
-- **Architecture Style**: REST API
-- **Database**: Redis, PostgreSQL
-- **Libraries**: Express.js, JWT, Bcrypt, CORS, dotenv, Redis client
+## Overview
 
-## 🔍 What This Microservice Does
-- Authenticates users via email and password
-- Issues and validates JWT tokens
-- Manages session state with Redis
-- Provides token renewal and logout endpoints
-- Secures endpoints using CORS and HTTPS
-- Works in coordination with `user-service` and `role-service`
+This service handles user authentication and JWT issuance for DEAS-LA.  
+Implements best practices with the Repository and Singleton patterns.  
+Secured with JWT and CORS, containerized with Docker, and includes CI/CD pipeline and Swagger docs.
 
-## ⚙️ How It Works
-- Receives login credentials on `/login`
-- Uses Bcrypt to compare password hashes
-- Generates a JWT token signed with a secret key
-- Stores sessions in Redis for fast access
-- Includes token validation middleware for protected routes
-- Exports logs to Prometheus and AWS CloudWatch
+## Endpoints
 
-## ✅ QA/PROD Compliance
-| Feature                          | Implemented |
-|----------------------------------|-------------|
-| RESTful architecture             | ✅          |
-| Redis + PostgreSQL integration   | ✅          |
-| Dockerized container             | ✅          |
-| CI/CD pipeline via GitHub        | ✅          |
-| JWT token security               | ✅          |
-| CORS policy enforcement          | ✅          |
-| Functional + unit tests          | ✅          |
-| Logs to Prometheus/CloudWatch    | ✅          |
+- `POST /api/auth/register` — Register a new user
+- `POST /api/auth/login` — Login and receive JWT
+- `GET /api/auth/me` — Get current user (JWT-protected)
 
---- 
-## Main endpoint: 
-POST http://localhost:3002/login
+## How It Works
 
---- 
+- **Singleton pattern:** Ensures only one DB connection is used (`src/config/db.js`).
+- **Repository pattern:** All user DB access through repository (`src/repositories/userRepository.js`).
+- **JWT auth:** Issue and verify tokens for secure endpoints.
+- **Swagger docs:** See `swagger.yaml`.
+- **Unit tests:** Run with `npm test` using Jest.
 
-## 🔄 Dependencies
-user-service: to retrieve and validate user records
+## CI/CD
 
-role-service: to attach permission context to issued tokens
+Automated tests via GitHub Actions in .github/workflows/ci.yml
 
-## 🚀 How to Run
+## Security
+
+- Passwords hashed with bcrypt
+
+- JWT tokens for authentication
+
+- CORS enabled
+
+## Run Locally
+
 ```bash
-docker build -t core-auth-service .
-docker run -p 3002:3002 core-auth-service
+npm install
+cp .env.example .env # Edit values for your DB and JWT secret
+npm start
+
+## Docker
+
+docker build -t auth-service .
+docker run --env-file .env -p 3001:3001 auth-service

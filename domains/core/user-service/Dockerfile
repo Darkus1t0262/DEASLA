@@ -1,21 +1,12 @@
-# Use official Node.js LTS image
-FROM node:18
+FROM node:20-alpine
 
-# Set working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy source code
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 3001
+EXPOSE 3002
 
-# Define environment variable
-ENV NODE_ENV=production
-
-# Start the application
 CMD ["npm", "start"]

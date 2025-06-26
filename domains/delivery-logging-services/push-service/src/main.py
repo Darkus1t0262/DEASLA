@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from src.controller import router
+from src.db import db  # Adjust this path if your db.py is elsewhere
 
 app = FastAPI(
     title="Push Service",
@@ -11,4 +12,8 @@ app.include_router(router, prefix="/api/push")
 
 @app.get("/")
 def health_check():
-    return {"status": "ok"}
+    try:
+        db.list_collection_names()
+        return {"status": "ok"}
+    except Exception as e:
+        return {"status": "db_error", "details": str(e)}

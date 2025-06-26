@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from src.controller import router
+from src.db import db  # Adjust the import if needed
 
 app = FastAPI(
     title="SMS Service",
@@ -11,4 +12,8 @@ app.include_router(router, prefix="/api/sms")
 
 @app.get("/")
 def health_check():
-    return {"status": "ok"}
+    try:
+        db.list_collection_names()  # MongoDB ping
+        return {"status": "ok"}
+    except Exception as e:
+        return {"status": "db_error", "details": str(e)}

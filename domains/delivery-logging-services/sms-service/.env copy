@@ -1,0 +1,9 @@
+# MongoDB Connection
+MONGO_HOST=<replace_with_mongo_public_ip>
+MONGO_PORT=27017
+MONGO_USER=mongoadmin
+MONGO_PASSWORD=<replace_with_mongo_password>
+MONGO_DB=deasla_logs
+
+# Other settings
+SERVICE_PORT=5000

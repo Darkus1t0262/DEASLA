@@ -10,6 +10,16 @@ app.use(express.json());
 
 app.use('/api/users', userRoutes);
 
+// --- Healthcheck endpoint ---
+app.get('/health', async (req, res) => {
+  try {
+    await sequelize.authenticate();
+    res.send('OK');
+  } catch (err) {
+    res.status(500).send('DB error');
+  }
+});
+
 const PORT = process.env.PORT || 3002;
 
 sequelize.authenticate().then(() => {

@@ -34,3 +34,57 @@ module "alb" {
   public_subnet_ids = module.network.public_subnet_ids
   security_group_id = module.security.security_group_id
 }
+
+# ===========================
+# === DATABASES SECTION ====
+# ===========================
+
+module "postgres" {
+  source         = "../modules/databases/postgres"
+  identifier     = "deasla-postgres"
+  db_name        = "deaslapg"
+  db_user        = "deaslaadmin"
+  db_password    = var.pg_password         # add to your variables.tf and tfvars
+  db_sg_id       = module.security.security_group_id
+}
+
+module "mongo" {
+  source         = "../modules/databases/mongo"
+  identifier     = "deasla-mongo"
+  db_user        = "mongoadmin"
+  db_password    = var.mongo_password      # add to your variables.tf and tfvars
+  db_sg_id       = module.security.security_group_id
+}
+
+module "redis" {
+  source         = "../modules/databases/redis"
+  identifier     = "deasla-redis"
+  db_sg_id       = module.security.security_group_id
+}
+
+module "neo4j" {
+  source         = "../modules/databases/neo4j"
+  identifier     = "deasla-neo4j"
+  db_user        = "neo4jadmin"
+  db_password    = var.neo4j_password      # add to your variables.tf and tfvars
+  db_sg_id       = module.security.security_group_id
+}
+
+module "cassandra" {
+  source         = "../modules/databases/cassandra"
+  identifier     = "deasla-cassandra"
+  db_user        = "cassandra"
+  db_password    = var.cassandra_password  # add to your variables.tf and tfvars
+  db_sg_id       = module.security.security_group_id
+}
+
+# ===============================
+# === API GATEWAY SECTION ====
+# ===============================
+
+module "api_gateway" {
+  source             = "../modules/gateway"
+  public_subnet_ids  = module.network.public_subnet_ids
+  security_group_id  = module.security.security_group_id
+  # add more variables as needed, e.g., docker image or Nginx config
+}

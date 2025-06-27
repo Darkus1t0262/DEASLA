@@ -1,7 +1,11 @@
 FROM golang:1.22-alpine AS build
 WORKDIR /app
-COPY . .
+
+COPY go.mod ./
 RUN go mod tidy
+
+COPY . .
+
 RUN go build -o notification-core ./cmd/main.go
 
 FROM alpine:latest

@@ -1,13 +1,14 @@
 package main
 
 import (
-    "github.com/gin-gonic/gin"
-    "notification/internal/handler"
+	"channel-service/internal/handler"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-    r := gin.Default()
-    r.GET("/health", handler.Health)
-    r.POST("/api/channel/route", handler.RouteChannel)
-    r.Run(":4102")
+	r := gin.Default()
+	r.GET("/health", handler.Health)
+	r.POST("/api/channel/route", handler.RouteChannel)
+	r.Run(":4102")
 }

@@ -1,4 +1,4 @@
-module notification
+module channel-service
 
 go 1.22
 

@@ -1,4 +1,4 @@
-module notification
+module socket-service
 
 go 1.22
 

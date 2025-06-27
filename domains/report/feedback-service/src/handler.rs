@@ -1,24 +1,26 @@
-use actix_web::{web, HttpResponse, Responder};
-use crate::model::{Feedback, FeedbackRequest};
-use crate::service::{save_feedback, get_feedbacks};
-use std::sync::Mutex;
+use actix_web::{post, get, web, HttpResponse, Responder};
+use crate::model::Report;
+use crate::service::{insert_report, get_reports};
+use mongodb::Database;
 
-lazy_static::lazy_static! {
-    static ref FEEDBACKS: Mutex<Vec<Feedback>> = Mutex::new(vec![]);
+#[post("/api/reports")]
+pub async fn create_report(
+    db: web::Data<Database>,
+    report: web::Json<Report>,
+) -> impl Responder {
+    let report = report.into_inner();
+    match insert_report(db.get_ref(), report).await {
+        Ok(_) => HttpResponse::Ok().body("Report submitted!"),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
+    }
 }
 
-pub async fn health() -> impl Responder {
-    HttpResponse::Ok().json(serde_json::json!({"status": "ok"}))
-}
-
-pub async fn submit_feedback(req: web::Json<FeedbackRequest>) -> impl Responder {
-    let mut feedbacks = FEEDBACKS.lock().unwrap();
-    let fb = save_feedback(req.into_inner(), feedbacks.len() + 1);
-    feedbacks.push(fb.clone());
-    HttpResponse::Ok().json(&fb)
-}
-
-pub async fn list_feedbacks() -> impl Responder {
-    let feedbacks = FEEDBACKS.lock().unwrap();
-    HttpResponse::Ok().json(&*feedbacks)
+#[get("/api/reports")]
+pub async fn fetch_reports(
+    db: web::Data<Database>,
+) -> impl Responder {
+    match get_reports(db.get_ref()).await {
+        Ok(reports) => HttpResponse::Ok().json(reports),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
+    }
 }

@@ -1,14 +1,9 @@
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Clone)]
-pub struct StatRequest {
-    pub dataset: Vec<f64>,
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct StatResponse {
-    pub mean: f64,
-    pub min: f64,
-    pub max: f64,
-    pub count: usize,
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
+pub struct StatAnalysis {
+    pub id: Option<i32>,
+    pub analysis_type: String,
+    pub value: f64,
+    pub calculated_at: Option<chrono::NaiveDateTime>,
 }

@@ -1,15 +1,12 @@
 use serde::{Serialize, Deserialize};
+use bson::oid::ObjectId;
 
-#[derive(Serialize, Deserialize, Clone)]
-pub struct MetricRequest {
-    pub name: String,
-    pub value: f64,
-}
-
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Metric {
-    pub id: usize,
+    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<ObjectId>,
     pub name: String,
     pub value: f64,
-    pub timestamp: String,
+    pub source: String,
+    pub collected_at: Option<String>, // set in service
 }

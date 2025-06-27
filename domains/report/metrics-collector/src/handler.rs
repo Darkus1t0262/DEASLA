@@ -1,24 +1,26 @@
-use actix_web::{web, HttpResponse, Responder};
-use crate::model::{Metric, MetricRequest};
-use crate::service::{save_metric, get_metrics};
-use std::sync::Mutex;
+use actix_web::{post, get, web, HttpResponse, Responder};
+use crate::model::Metric;
+use crate::service::{insert_metric, get_metrics};
+use mongodb::Database;
 
-lazy_static::lazy_static! {
-    static ref METRICS: Mutex<Vec<Metric>> = Mutex::new(vec![]);
+#[post("/api/metrics")]
+pub async fn create_metric(
+    db: web::Data<Database>,
+    metric: web::Json<Metric>,
+) -> impl Responder {
+    let metric = metric.into_inner();
+    match insert_metric(db.get_ref(), metric).await {
+        Ok(_) => HttpResponse::Ok().body("Metric collected!"),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
+    }
 }
 
-pub async fn health() -> impl Responder {
-    HttpResponse::Ok().json(serde_json::json!({"status": "ok"}))
-}
-
-pub async fn add_metric(req: web::Json<MetricRequest>) -> impl Responder {
-    let mut metrics = METRICS.lock().unwrap();
-    let metric = save_metric(req.into_inner(), metrics.len() + 1);
-    metrics.push(metric.clone());
-    HttpResponse::Ok().json(&metric)
-}
-
-pub async fn list_metrics() -> impl Responder {
-    let metrics = METRICS.lock().unwrap();
-    HttpResponse::Ok().json(&*metrics)
+#[get("/api/metrics")]
+pub async fn fetch_metrics(
+    db: web::Data<Database>,
+) -> impl Responder {
+    match get_metrics(db.get_ref()).await {
+        Ok(metrics) => HttpResponse::Ok().json(metrics),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
+    }
 }

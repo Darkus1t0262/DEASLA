@@ -1,13 +1,9 @@
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Clone)]
-pub struct ReportRequest {
-    pub kind: String,
-    pub filter: Option<String>,
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct ReportResponse {
-    pub filename: String,
-    pub content: String, // In real scenario, a link or file
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
+pub struct Report {
+    pub id: Option<i32>,
+    pub title: String,
+    pub description: String,
+    pub generated_at: Option<chrono::NaiveDateTime>,
 }

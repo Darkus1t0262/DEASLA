@@ -1,12 +1,26 @@
-use actix_web::{web, HttpResponse, Responder};
-use crate::model::{StatRequest, StatResponse};
-use crate::service::analyze;
+use actix_web::{post, get, web, HttpResponse, Responder};
+use crate::model::StatAnalysis;
+use crate::service::{insert_stat, get_stats};
+use sqlx::PgPool;
 
-pub async fn health() -> impl Responder {
-    HttpResponse::Ok().json(serde_json::json!({"status": "ok"}))
+#[post("/api/stats")]
+pub async fn create_stat(
+    db: web::Data<PgPool>,
+    stat: web::Json<StatAnalysis>,
+) -> impl Responder {
+    let stat = stat.into_inner();
+    match insert_stat(db.get_ref(), stat).await {
+        Ok(_) => HttpResponse::Ok().body("Stat analysis saved!"),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
+    }
 }
 
-pub async fn analyze_stats(req: web::Json<StatRequest>) -> impl Responder {
-    let report = analyze(req.into_inner());
-    HttpResponse::Ok().json(&report)
+#[get("/api/stats")]
+pub async fn fetch_stats(
+    db: web::Data<PgPool>,
+) -> impl Responder {
+    match get_stats(db.get_ref()).await {
+        Ok(stats) => HttpResponse::Ok().json(stats),
+        Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
+    }
 }

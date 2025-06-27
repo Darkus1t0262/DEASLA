@@ -1,11 +1,34 @@
-use crate::model::{ReportRequest, ReportResponse};
+use crate::model::Report;
+use sqlx::{PgPool, Error};
 
-pub fn generate_report(req: ReportRequest) -> ReportResponse {
-    // Simulate a PDF/CSV report by returning a string
-    let filename = format!("report-{}.csv", req.kind);
-    let content = format!("Report Type: {}\nFilter: {}\nData: ...", req.kind, req.filter.unwrap_or("None".into()));
-    ReportResponse {
-        filename,
-        content,
-    }
+pub async fn insert_report(pool: &PgPool, mut report: Report) -> Result<(), Error> {
+    let rec = sqlx::query!(
+        r#"
+        INSERT INTO reports (title, description, generated_at)
+        VALUES ($1, $2, NOW())
+        RETURNING id, generated_at
+        "#,
+        report.title,
+        report.description,
+    )
+    .fetch_one(pool)
+    .await?;
+
+    report.id = Some(rec.id);
+    report.generated_at = Some(rec.generated_at);
+
+    Ok(())
+}
+
+pub async fn get_reports(pool: &PgPool) -> Result<Vec<Report>, Error> {
+    let reports = sqlx::query_as!(
+        Report,
+        r#"
+        SELECT id, title, description, generated_at FROM reports ORDER BY generated_at DESC
+        "#
+    )
+    .fetch_all(pool)
+    .await?;
+
+    Ok(reports)
 }

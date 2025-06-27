@@ -1,14 +1,33 @@
-mod handler;
 use actix_web::{App, HttpServer, web};
+use dotenv::dotenv;
+use std::env;
+use crate::handler::{create_report, fetch_reports};
+use crate::db::connect_db;
+
+mod handler;
+mod service;
+mod model;
+mod db;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
+    dotenv().ok();
+
+    let port = env::var("PORT").unwrap_or_else(|_| "8084".to_string());
+    let bind_addr = format!("0.0.0.0:{}", port);
+
+    let pool = connect_db().await;
+    let pool_data = web::Data::new(pool);
+
+    println!("🚀 Report generator service running on {}", bind_addr);
+
+    HttpServer::new(move || {
         App::new()
-            .route("/health", web::get().to(handler::health))
-            .route("/api/report", web::post().to(handler::generate_report))
+            .app_data(pool_data.clone())
+            .service(create_report)
+            .service(fetch_reports)
     })
-    .bind(("0.0.0.0", 4204))?
+    .bind(&bind_addr)?
     .run()
     .await
 }

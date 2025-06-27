@@ -1,24 +1,34 @@
 use actix_web::{web, HttpResponse, Responder};
 use crate::model::{AuditLog, LogRequest};
 use crate::service::{save_log, get_logs};
-use std::sync::Mutex;
-
-lazy_static::lazy_static! {
-    static ref LOGS: Mutex<Vec<AuditLog>> = Mutex::new(vec![]);
-}
 
 pub async fn health() -> impl Responder {
-    HttpResponse::Ok().json(serde_json::json!({"status": "ok"}))
+    match crate::db::connect_pg().await {
+        Ok(_) => HttpResponse::Ok().json(serde_json::json!({"status": "ok"})),
+        Err(_) => HttpResponse::InternalServerError().json(serde_json::json!({"status": "db_error"})),
+    }
 }
 
 pub async fn log_action(req: web::Json<LogRequest>) -> impl Responder {
-    let mut logs = LOGS.lock().unwrap();
-    let log = save_log(req.into_inner(), logs.len() + 1);
-    logs.push(log.clone());
-    HttpResponse::Ok().json(&log)
+    // Connect to the DB
+    match crate::db::connect_pg().await {
+        Ok(client) => {
+            match save_log(req.into_inner(), &client).await {
+                Some(log) => HttpResponse::Ok().json(log),
+                None => HttpResponse::InternalServerError().body("Failed to save log"),
+            }
+        }
+        Err(_) => HttpResponse::InternalServerError().body("DB connection error"),
+    }
 }
 
 pub async fn list_logs() -> impl Responder {
-    let logs = LOGS.lock().unwrap();
-    HttpResponse::Ok().json(&*logs)
+    // Connect to the DB
+    match crate::db::connect_pg().await {
+        Ok(client) => {
+            let logs = get_logs(&client).await;
+            HttpResponse::Ok().json(logs)
+        }
+        Err(_) => HttpResponse::InternalServerError().body("DB connection error"),
+    }
 }

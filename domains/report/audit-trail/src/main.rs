@@ -1,8 +1,12 @@
 mod handler;
+mod db;
+
 use actix_web::{App, HttpServer, web};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv::dotenv().ok(); // <--- Add this so .env is loaded!
+
     HttpServer::new(|| {
         App::new()
             .route("/health", web::get().to(handler::health))

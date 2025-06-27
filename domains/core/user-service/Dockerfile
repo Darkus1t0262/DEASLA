@@ -4,4 +4,5 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 COPY .env .env
-CMD ["node", "index.js"]
+# Start the app (adjust if your entry file is src/app.js)
+CMD ["node", "src/app.js"]

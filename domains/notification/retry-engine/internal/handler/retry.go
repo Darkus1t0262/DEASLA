@@ -17,7 +17,11 @@ func RetryMessage(c *gin.Context) {
         c.JSON(http.StatusBadRequest, gin.H{"success": false, "detail": err.Error()})
         return
     }
-    retries, _ := service.AddRetry(req.MessageID, req.Payload)
+    retries, err := service.AddRetry(req.MessageID, req.Payload)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"success": false, "detail": err.Error()})
+        return
+    }
     resp := model.RetryResponse{
         Success: true,
         Retries: retries,
@@ -27,6 +31,10 @@ func RetryMessage(c *gin.Context) {
 }
 
 func ListRetries(c *gin.Context) {
-    statuses := service.ListRetryStatuses()
-    c.JSON(http.StatusOK, gin.H{"statuses": statuses})
+    statuses, err := service.ListRetryStatuses()
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"success": false, "detail": err.Error()})
+        return
+    }
+    c.JSON(http.StatusOK, gin.H{"success": true, "statuses": statuses})
 }

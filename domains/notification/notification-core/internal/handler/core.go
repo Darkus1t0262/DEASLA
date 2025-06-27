@@ -17,9 +17,17 @@ func SendNotification(c *gin.Context) {
         c.JSON(http.StatusBadRequest, gin.H{"success": false, "detail": err.Error()})
         return
     }
-    ok := service.SendNotification(req.Recipient, req.Content)
+    // Changed to handle error from service
+    err := service.SendNotification(req.Recipient, req.Content)
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{
+            "success": false,
+            "detail":  "Failed to send notification: " + err.Error(),
+        })
+        return
+    }
     resp := model.NotificationResponse{
-        Success: ok,
+        Success: true,
         Detail:  "Notification sent",
     }
     c.JSON(http.StatusOK, resp)

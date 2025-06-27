@@ -1,3 +1,11 @@
 package service
 
-// For real apps, add channel broadcasting logic here.
+import (
+    "context"
+    "notification/internal/db"
+)
+
+func BroadcastMessage(channel string, message string) error {
+    ctx := context.Background()
+    return db.RedisClient.Publish(ctx, channel, message).Err()
+}

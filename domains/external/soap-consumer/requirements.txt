@@ -1,4 +1,6 @@
 fastapi
 uvicorn
+sqlalchemy>=1.4
+asyncpg
 pydantic
 pytest

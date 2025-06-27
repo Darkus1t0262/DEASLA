@@ -5,6 +5,6 @@ from src.service import handle_webhook
 router = APIRouter()
 
 @router.post("/", response_model=WebhookResponse)
-def webhook_endpoint(event: WebhookEvent):
-    result = handle_webhook(event.event_type, event.payload)
+async def webhook_endpoint(event: WebhookEvent):
+    result = await handle_webhook(event.event_type, event.payload)
     return WebhookResponse(success=True, detail=result)

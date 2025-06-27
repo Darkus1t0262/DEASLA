@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  title: Language Service API
+  version: "1.0"
+  description: REST API for supported language management
+servers:
+  - url: http://localhost:3005
+paths:
+  /api/languages:
+    get:
+      summary: Get all languages
+      responses:
+        "200":
+          description: List of languages
+    post:
+      summary: Add a new language
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Language'
+      responses:
+        "201":
+          description: Language added
+  /api/languages/{id}:
+    get:
+      summary: Get language by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Language found
+        "404":
+          description: Not found
+    put:
+      summary: Update language
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Language'
+      responses:
+        "200":
+          description: Language updated
+        "404":
+          description: Not found
+    delete:
+      summary: Delete language
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+components:
+  schemas:
+    Language:
+      type: object
+      properties:
+        _id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        active:
+          type: boolean

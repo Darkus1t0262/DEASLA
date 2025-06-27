@@ -1,0 +1,43 @@
+openapi: 3.0.0
+info:
+  title: Push Service
+  version: 1.0.0
+paths:
+  /api/push/send:
+    post:
+      summary: Send Push Notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PushRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushResponse'
+components:
+  schemas:
+    PushRequest:
+      type: object
+      properties:
+        device_id:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+      required:
+        - device_id
+        - title
+        - body
+    PushResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        detail:
+          type: string

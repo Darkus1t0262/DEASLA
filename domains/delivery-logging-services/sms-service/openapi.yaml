@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  title: SMS Service
+  version: 1.0.0
+paths:
+  /api/sms/send:
+    post:
+      summary: Send SMS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SMSRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SMSResponse'
+components:
+  schemas:
+    SMSRequest:
+      type: object
+      properties:
+        phone_number:
+          type: string
+        message:
+          type: string
+      required:
+        - phone_number
+        - message
+    SMSResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        detail:
+          type: string

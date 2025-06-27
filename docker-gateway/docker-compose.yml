@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - user-service
+      - auth-service
+      - alert-service
+
+  user-service:
+    image: darkjus/user-service:latest
+    ports:
+      - "3001:3000"
+
+  auth-service:
+    image: darkjus/auth-service:latest
+    ports:
+      - "3002:3000"
+
+  alert-service:
+    image: darkjus/alert-service:latest
+    ports:
+      - "3003:3000"

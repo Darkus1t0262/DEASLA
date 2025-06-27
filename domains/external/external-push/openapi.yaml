@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  title: External Push Service
+  version: 1.0.0
+paths:
+  /api/external-push/:
+    post:
+      summary: External push
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalPushRequest'
+      responses:
+        '200':
+          description: Push result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalPushResponse'
+components:
+  schemas:
+    ExternalPushRequest:
+      type: object
+      properties:
+        target:
+          type: string
+        message:
+          type: string
+      required:
+        - target
+        - message
+    ExternalPushResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        detail:
+          type: string

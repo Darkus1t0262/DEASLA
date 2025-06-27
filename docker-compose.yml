@@ -1,0 +1,75 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: deasla_db
+      POSTGRES_USER: deasla_user
+      POSTGRES_PASSWORD: deasla_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - deas-net
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: deasla_mysql
+      MYSQL_USER: deasla
+      MYSQL_PASSWORD: pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - deas-net
+
+  mongodb:
+    image: mongo:5
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - deas-net
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - deas-net
+
+  neo4j:
+    image: neo4j:5
+    container_name: neo4j
+    restart: always
+    environment:
+      NEO4J_AUTH: neo4j/password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - deas-net
+
+volumes:
+  pg_data:
+  mysql_data:
+  mongo_data:
+  neo4j_data:
+
+networks:
+  deas-net:
+    driver: bridge

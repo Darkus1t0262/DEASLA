@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  title: Channel Validator Service
+  version: 1.0.0
+paths:
+  /api/channel-validator/:
+    post:
+      summary: Validate channel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelValidationRequest'
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelValidationResponse'
+components:
+  schemas:
+    ChannelValidationRequest:
+      type: object
+      properties:
+        channel:
+          type: string
+        address:
+          type: string
+      required:
+        - channel
+        - address
+    ChannelValidationResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        detail:
+          type: string

@@ -1,0 +1,44 @@
+
+openapi: 3.0.0
+info:
+  title: Email Service
+  version: 1.0.0
+paths:
+  /api/email/send:
+    post:
+      summary: Send Email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailResponse'
+components:
+  schemas:
+    EmailRequest:
+      type: object
+      properties:
+        to:
+          type: string
+        subject:
+          type: string
+        body:
+          type: string
+      required:
+        - to
+        - subject
+        - body
+    EmailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        detail:
+          type: string

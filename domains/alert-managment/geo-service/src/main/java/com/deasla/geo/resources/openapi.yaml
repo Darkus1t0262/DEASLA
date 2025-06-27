@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  title: Geo Service
+  version: 1.0.0
+paths:
+  /api/geo/zones:
+    get:
+      summary: List geo-zones
+      responses:
+        '200':
+          description: List of geo-zones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GeoZone'
+    post:
+      summary: Create geo-zone
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeoZone'
+      responses:
+        '200':
+          description: Created geo-zone
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeoZone'
+  /api/geo/zones/{zoneId}/contains:
+    post:
+      summary: Check if point is inside zone
+      parameters:
+        - in: path
+          name: zoneId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lon:
+                  type: number
+              required:
+                - lat
+                - lon
+      responses:
+        '200':
+          description: Inside?
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inside:
+                    type: boolean
+components:
+  schemas:
+    GeoZone:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        polygon:
+          type: array
+          items:
+            type: array
+            items:
+              type: number

@@ -1,0 +1,42 @@
+openapi: 3.0.0
+info:
+  title: SOAP Consumer
+  version: 1.0.0
+paths:
+  /api/soap/:
+    post:
+      summary: SOAP consume
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SoapRequest'
+      responses:
+        '200':
+          description: SOAP response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SoapResponse'
+components:
+  schemas:
+    SoapRequest:
+      type: object
+      properties:
+        action:
+          type: string
+        payload:
+          type: object
+      required:
+        - action
+        - payload
+    SoapResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        detail:
+          type: string
+        data:
+          type: object

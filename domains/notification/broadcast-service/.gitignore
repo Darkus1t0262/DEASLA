@@ -1,0 +1,4 @@
+/broadcast-service
+*.exe
+*.log
+vendor/

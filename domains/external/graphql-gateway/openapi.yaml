@@ -1,0 +1,39 @@
+openapi: 3.0.0
+info:
+  title: GraphQL Gateway
+  version: 1.0.0
+paths:
+  /api/graphql/:
+    post:
+      summary: GraphQL query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLQuery'
+      responses:
+        '200':
+          description: GraphQL response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLResponse'
+components:
+  schemas:
+    GraphQLQuery:
+      type: object
+      properties:
+        query:
+          type: string
+      required:
+        - query
+    GraphQLResponse:
+      type: object
+      properties:
+        data:
+          type: object
+        errors:
+          type: array
+          items:
+            type: string

@@ -1,26 +1,25 @@
 use actix_web::{post, get, web, HttpResponse, Responder};
-use crate::model::Report;
-use crate::service::{insert_report, get_reports};
+use crate::model::{Feedback, FeedbackRequest};
+use crate::service::{save_feedback, get_feedbacks};
 use mongodb::Database;
 
-#[post("/api/reports")]
-pub async fn create_report(
+#[post("/api/feedback")]
+pub async fn submit_feedback(
     db: web::Data<Database>,
-    report: web::Json<Report>,
+    payload: web::Json<FeedbackRequest>,
 ) -> impl Responder {
-    let report = report.into_inner();
-    match insert_report(db.get_ref(), report).await {
-        Ok(_) => HttpResponse::Ok().body("Report submitted!"),
+    match save_feedback(db.get_ref(), payload.into_inner()).await {
+        Ok(_) => HttpResponse::Ok().body("Feedback submitted!"),
         Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
     }
 }
 
-#[get("/api/reports")]
-pub async fn fetch_reports(
+#[get("/api/feedback")]
+pub async fn fetch_feedback(
     db: web::Data<Database>,
 ) -> impl Responder {
-    match get_reports(db.get_ref()).await {
-        Ok(reports) => HttpResponse::Ok().json(reports),
+    match get_feedbacks(db.get_ref()).await {
+        Ok(items) => HttpResponse::Ok().json(items),
         Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
     }
 }

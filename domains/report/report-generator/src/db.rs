@@ -1,8 +1,8 @@
 use dotenv::dotenv;
 use std::env;
-use tokio_postgres::{Client, NoTls};
+use sqlx::{postgres::PgPoolOptions, PgPool};
 
-pub async fn connect_pg() -> Result<Client, tokio_postgres::Error> {
+pub async fn connect_db() -> PgPool {
     dotenv().ok();
     let host = env::var("POSTGRES_HOST").unwrap();
     let user = env::var("POSTGRES_USER").unwrap();
@@ -10,11 +10,13 @@ pub async fn connect_pg() -> Result<Client, tokio_postgres::Error> {
     let db = env::var("POSTGRES_DB").unwrap();
 
     let conn_str = format!(
-        "host={} user={} password={} dbname={}",
-        host, user, password, db
+        "postgres://{}:{}@{}:5432/{}",
+        user, password, host, db
     );
 
-    let (client, connection) = tokio_postgres::connect(&conn_str, NoTls).await?;
-    tokio::spawn(connection);
-    Ok(client)
+    PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&conn_str)
+        .await
+        .expect("Failed to connect to Postgres")
 }

@@ -1,20 +1,20 @@
 use dotenv::dotenv;
+use sqlx::{PgPool, postgres::PgPoolOptions};
 use std::env;
-use tokio_postgres::{Client, NoTls};
 
-pub async fn connect_pg() -> Result<Client, tokio_postgres::Error> {
+/// Connects to PostgreSQL using environment variables.
+pub async fn connect_pg() -> Result<PgPool, sqlx::Error> {
     dotenv().ok();
-    let host = env::var("POSTGRES_HOST").unwrap();
-    let user = env::var("POSTGRES_USER").unwrap();
-    let password = env::var("POSTGRES_PASSWORD").unwrap();
-    let db = env::var("POSTGRES_DB").unwrap();
 
-    let conn_str = format!(
-        "host={} user={} password={} dbname={}",
-        host, user, password, db
-    );
+    let database_url = env::var("DATABASE_URL")
+        .expect("❌ DATABASE_URL must be set in environment or .env");
 
-    let (client, connection) = tokio_postgres::connect(&conn_str, NoTls).await?;
-    tokio::spawn(connection);
-    Ok(client)
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(&database_url)
+        .await?;
+
+    println!("✅ Connected to PostgreSQL");
+
+    Ok(pool)
 }

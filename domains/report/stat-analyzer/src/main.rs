@@ -1,8 +1,9 @@
 use actix_web::{App, HttpServer, web};
 use dotenv::dotenv;
 use std::env;
+
 use crate::handler::{create_stat, fetch_stats};
-use crate::db::connect_db;
+use crate::db::connect_pg;
 
 mod handler;
 mod service;
@@ -16,10 +17,13 @@ async fn main() -> std::io::Result<()> {
     let port = env::var("PORT").unwrap_or_else(|_| "8085".to_string());
     let bind_addr = format!("0.0.0.0:{}", port);
 
-    let pool = connect_db().await;
+    // Connect to PostgreSQL database
+    let pool = connect_pg()
+        .await
+        .expect("❌ Failed to connect to PostgreSQL");
     let pool_data = web::Data::new(pool);
 
-    println!("🚀 Stat analyzer service running on {}", bind_addr);
+    println!("🚀 Stat analyzer service running on http://{}", bind_addr);
 
     HttpServer::new(move || {
         App::new()

@@ -1,6 +1,6 @@
 resource "aws_security_group" "microservice_sg" {
   name        = "deas-microservices-sg"
-  description = "Allow HTTP, HTTPS, and custom ports"
+  description = "Allow HTTP, HTTPS, custom ports, and Cassandra access"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -36,6 +36,15 @@ resource "aws_security_group" "microservice_sg" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Optional: Allow response from Cassandra port if Cassandra initiated traffic
+  ingress {
+    description     = "Allow CQL traffic response from Cassandra"
+    from_port       = 9042
+    to_port         = 9042
+    protocol        = "tcp"
+    security_groups = [var.cassandra_sg_id] # <- use variable here
   }
 
   egress {

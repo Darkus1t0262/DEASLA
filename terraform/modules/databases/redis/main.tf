@@ -1,15 +1,25 @@
-resource "aws_elasticache_subnet_group" "redis_subnet" {
-  name       = "${var.identifier}-subnet-group"
-  subnet_ids = var.subnet_ids
-}
+resource "aws_instance" "redis_instance" {
+  ami                         = "ami-053b0d53c279acc90" # Ubuntu 22.04 LTS (us-east-1)
+  instance_type               = "t2.micro"
+  subnet_id                   = "subnet-0e37b5e4aa4224e3d"
+  vpc_security_group_ids      = ["sg-04ba736cd6865725d"]
+  key_name                    = "deas-key2" # Cambia si usas otra clave
 
-resource "aws_elasticache_cluster" "redis" {
-  cluster_id           = var.identifier
-  engine               = "redis"
-  node_type            = "cache.t2.micro"
-  num_cache_nodes      = 1
-  parameter_group_name = "default.redis6.x"
-  port                 = 6379
-  subnet_group_name    = aws_elasticache_subnet_group.redis_subnet.name
-  security_group_ids   = [var.db_sg_id]
+  associate_public_ip_address = true
+
+  tags = {
+    Name        = "deasla-redis"
+    Environment = "qa"
+    ManagedBy   = "Terraform"
+  }
+
+  user_data = <<-EOF
+              #!/bin/bash
+              apt-get update -y
+              apt-get install -y docker.io
+              systemctl start docker
+              systemctl enable docker
+              docker run -d --name redis-server -p 6379:6379 redis:7
+              docker update --restart always redis-server
+            EOF
 }

@@ -4,9 +4,11 @@ import redis
 
 load_dotenv()
 
-r = redis.Redis(
+redis_client = redis.Redis(
     host=os.environ['REDIS_HOST'],
     port=int(os.environ['REDIS_PORT'])
 )
-r.ping()
+
+# Test de conexión opcional (puede dejarse o comentarse en producción)
+redis_client.ping()
 print("✅ Connected to Redis!")

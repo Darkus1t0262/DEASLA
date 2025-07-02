@@ -11,3 +11,5 @@ sqlx = { version = "0.7", features = ["runtime-tokio-native-tls", "postgres", "c
 dotenv = "0.15"
 chrono = { version = "0.4", features = ["serde"] }
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+prometheus = "0.13"
+lazy_static = "1.4"

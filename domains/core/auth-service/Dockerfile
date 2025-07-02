@@ -6,3 +6,4 @@ COPY . .
 COPY .env .env
 # Start the app (adjust if your entry file is src/app.js)
 CMD ["node", "src/app.js"]
+EXPOSE 3001

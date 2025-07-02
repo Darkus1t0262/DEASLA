@@ -8,4 +8,6 @@ RUN pip install -r requirements.txt
 COPY ./src ./src
 COPY ./tests ./tests
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "4004"]
+EXPOSE 4305
+
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "4305"]

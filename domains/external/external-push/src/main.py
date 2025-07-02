@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 from src.controller import router
 
 app = FastAPI(
@@ -7,6 +8,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# ✅ Add metrics
+Instrumentator().instrument(app).expose(app)
+
+# ✅ Include push routes
 app.include_router(router, prefix="/api/external-push")
 
 @app.get("/")

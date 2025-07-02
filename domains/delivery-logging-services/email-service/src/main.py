@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from src.controller import router
-from src.db import db  # Import your db instance (MongoDB)
+from src.db import db  # MongoDB instance
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI(
     title="Email Service",
@@ -8,12 +9,16 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# 📊 Prometheus metrics
+Instrumentator().instrument(app).expose(app)
+
+# 📦 API routes
 app.include_router(router, prefix="/api/email")
 
+# ✅ Health check
 @app.get("/")
 def health_check():
     try:
-        # Try a simple MongoDB command
         db.list_collection_names()
         return {"status": "ok"}
     except Exception as e:

@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "H7kSeLWZ6PU83fHPWsvnyTOnx/m7/yBbNRix935q+Z4=",
+  "Source": "validation-service",
+  "BasePath": "_content/validation-service",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "validation-service\\wwwroot",
+      "Source": "validation-service",
+      "ContentRoot": "C:\\Users\\josue\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\validation-service\\wwwroot\\",
+      "BasePath": "_content/validation-service",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

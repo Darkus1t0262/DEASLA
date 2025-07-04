@@ -1,12 +1,12 @@
 # Template Service
 
 **Domain:** Alert Management  
-**Tech:** Java, Spring Boot, PostgreSQL, REST  
+**Tech:** C#, ASP.NET Core, MongoDB, REST  
 **Design Patterns:** Repository, Singleton
 
 ## Overview
 
-This service manages templates for alert messages in DEAS-LA.
+This service manages templates for alert messages in DEAS-LA.  
 It provides CRUD operations for reusable notification templates.
 
 ## Endpoints
@@ -19,27 +19,44 @@ It provides CRUD operations for reusable notification templates.
 
 ## How It Works
 
-- **Singleton pattern:** Spring Boot services/components are singleton by default.
-- **Repository pattern:** TemplateRepository abstracts all DB logic.
+- **Singleton pattern:** ASP.NET Core services/components are singleton by default, providing a single instance throughout the application.
+- **Repository pattern:** `TemplateRepository` abstracts all MongoDB logic and operations.
 - **Swagger/OpenAPI:** See `openapi.yaml` or `/swagger-ui.html` when running.
-- **Unit tests:** Run with `mvn test`.
+- **Unit tests:** Run with `dotnet test`.
 
 ## CI/CD
 
-Automated tests with GitHub Actions in .github/workflows/ci.yml
+Automated tests with GitHub Actions in `.github/workflows/ci.yml`
 
 ## Run Locally
 
-```bash
-# Set DB in application.properties, then:
-mvn clean package
-java -jar target/template-service-1.0.0.jar
+### Local Setup
 
+Make sure MongoDB is running locally or you have access to a remote instance. The MongoDB connection details can be configured in **`appsettings.json`**.
+
+```json
+{
+  "ConnectionStrings": {
+    "MongoConnection": "mongodb://admin:secret123@34.204.16.234:27017/deasla_logs"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
 
 # Docker
 
+# Build Docker image
 docker build -t template-service .
-docker run -e SPRING_DATASOURCE_URL=jdbc:postgresql://dbhost:5432/deasla_template \
-           -e SPRING_DATASOURCE_USERNAME=youruser \
-           -e SPRING_DATASOURCE_PASSWORD=yourpassword \
-           -p 8083:8083 template-service
+
+# Run the service with MongoDB credentials
+docker run -e MONGO_HOST=34.204.16.234 \
+           -e MONGO_PORT=27017 \
+           -e MONGO_USER=admin \
+           -e MONGO_PASSWORD=secret123 \
+           -e MONGO_DB=deasla_logs \
+           -p 4005:4005 template-service

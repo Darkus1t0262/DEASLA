@@ -1,44 +1,61 @@
 # Schedule Service
 
 **Domain:** Alert Management  
-**Tech:** Java, Spring Boot, PostgreSQL, REST  
+**Tech:** C#, ASP.NET Core, PostgreSQL, REST  
 **Design Patterns:** Repository, Singleton
 
 ## Overview
 
-This service manages the scheduling of alerts in DEAS-LA.
-It provides CRUD operations for scheduled alert dispatches.
+This service manages schedules for alert messages in DEAS-LA.  
+It provides CRUD operations for scheduling alert templates.
 
 ## Endpoints
 
-- `GET /api/schedules` — List all schedules
-- `POST /api/schedules` — Create schedule
-- `GET /api/schedules/{id}` — Get schedule by ID
-- `PUT /api/schedules/{id}` — Update schedule
-- `DELETE /api/schedules/{id}` — Delete schedule
+- `GET /api/schedule` — List all scheduled alerts
+- `POST /api/schedule` — Create a new schedule
+- `GET /api/schedule/{id}` — Get schedule by ID
+- `PUT /api/schedule/{id}` — Update schedule
+- `DELETE /api/schedule/{id}` — Delete schedule
 
 ## How It Works
 
-- **Singleton pattern:** Spring Boot services/components are singleton by default.
-- **Repository pattern:** ScheduleRepository abstracts all DB logic.
+- **Singleton pattern:** ASP.NET Core services/components are singleton by default, providing a single instance throughout the application.
+- **Repository pattern:** `ScheduleDbContext` and `IScheduleService` abstract all PostgreSQL and service logic respectively.
+- **Entity Framework Core:** Uses PostgreSQL with **DbContext** for database interaction.
 - **Swagger/OpenAPI:** See `openapi.yaml` or `/swagger-ui.html` when running.
-- **Unit tests:** Run with `mvn test`.
+- **Unit tests:** Run with `dotnet test`.
 
 ## CI/CD
 
-Automated tests with GitHub Actions in .github/workflows/ci.yml
+Automated tests with GitHub Actions in `.github/workflows/ci.yml`
 
 ## Run Locally
 
-```bash
-# Set DB in application.properties, then:
-mvn clean package
-java -jar target/schedule-service-1.0.0.jar
+### Local Setup
+
+Make sure PostgreSQL is running locally or you have access to a remote instance. The connection string can be configured in **`appsettings.json`**.
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=deasla_schedule;Username=admin;Password=secret123"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+
 
 # Docker
 
+# Build Docker image
 docker build -t schedule-service .
-docker run -e SPRING_DATASOURCE_URL=jdbc:postgresql://dbhost:5432/deasla_schedule \
-           -e SPRING_DATASOURCE_USERNAME=youruser \
-           -e SPRING_DATASOURCE_PASSWORD=yourpassword \
-           -p 8082:8082 schedule-service
+
+# Run the service with PostgreSQL credentials
+docker run -e ASPNETCORE_ENVIRONMENT=Development \
+           -e DefaultConnection="Host=localhost;Port=5432;Database=deasla_schedule;Username=admin;Password=secret123" \
+           -p 4005:4005 schedule-service

@@ -9,16 +9,22 @@ namespace AlertService.Data
 
         public CassandraDbContext(IConfiguration configuration)
         {
-            var cluster = Cluster.Builder()
+            var clusterBuilder = Cluster.Builder()
                 .AddContactPoint(configuration["Cassandra:Host"])
-                .WithPort(int.Parse(configuration["Cassandra:Port"]))
-                .WithCredentials(
-                    configuration["Cassandra:Username"],
-                    configuration["Cassandra:Password"])
-                .WithDefaultKeyspace(configuration["Cassandra:Keyspace"])
-                .Build();
+                .WithPort(int.Parse(configuration["Cassandra:Port"]));
 
-            Session = cluster.Connect();
+            // Optional: remove if your Cassandra container doesn’t require credentials
+            var username = configuration["Cassandra:Username"];
+            var password = configuration["Cassandra:Password"];
+            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+            {
+                clusterBuilder = clusterBuilder.WithCredentials(username, password);
+            }
+
+            var cluster = clusterBuilder.Build();
+
+            // ✅ Connect explicitly to the keyspace
+            Session = cluster.Connect(configuration["Cassandra:Keyspace"]);
         }
     }
 }

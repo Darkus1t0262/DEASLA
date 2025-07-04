@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Alert Service API
   version: "1.0"
-  description: REST API for creating and managing alerts
+  description: REST API for creating and managing alerts in Cassandra
 servers:
   - url: http://localhost:8081
 paths:
@@ -31,7 +31,8 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "200":
           description: Alert found
@@ -44,7 +45,8 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -63,7 +65,8 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
+            format: uuid
       responses:
         "204":
           description: Deleted
@@ -75,7 +78,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         title:
           type: string
         message:

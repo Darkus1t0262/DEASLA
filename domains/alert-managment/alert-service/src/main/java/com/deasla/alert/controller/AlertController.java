@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/alerts")
@@ -31,21 +32,21 @@ public class AlertController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Alert> getAlert(@PathVariable Long id) {
+    public ResponseEntity<Alert> getAlert(@PathVariable UUID id) {
         return alertService.getAlert(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Alert> updateAlert(@PathVariable Long id, @RequestBody Alert alert) {
+    public ResponseEntity<Alert> updateAlert(@PathVariable UUID id, @RequestBody Alert alert) {
         Alert updated = alertService.updateAlert(id, alert);
         if (updated == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAlert(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAlert(@PathVariable UUID id) {
         boolean deleted = alertService.deleteAlert(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }

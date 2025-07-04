@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AlertService {
@@ -24,10 +25,12 @@ public class AlertService {
     }
 
     public Alert createAlert(Alert alert) {
+        alert.setId(UUID.randomUUID()); // Cassandra requires manual ID generation
+
         Alert savedAlert = alertRepository.save(alert);
 
-        // 🔁 Send alert to Kafka
-        String message = String.format("ALERT[%d]: %s - %s", savedAlert.getId(), savedAlert.getSeverity(), savedAlert.getMessage());
+        String message = String.format("ALERT[%s]: %s - %s",
+                savedAlert.getId(), savedAlert.getSeverity(), savedAlert.getMessage());
         kafkaTemplate.send(TOPIC, message);
 
         return savedAlert;
@@ -37,11 +40,11 @@ public class AlertService {
         return alertRepository.findAll();
     }
 
-    public Optional<Alert> getAlert(Long id) {
+    public Optional<Alert> getAlert(UUID id) {
         return alertRepository.findById(id);
     }
 
-    public Alert updateAlert(Long id, Alert alertDetails) {
+    public Alert updateAlert(UUID id, Alert alertDetails) {
         return alertRepository.findById(id).map(alert -> {
             alert.setTitle(alertDetails.getTitle());
             alert.setMessage(alertDetails.getMessage());
@@ -52,7 +55,7 @@ public class AlertService {
         }).orElse(null);
     }
 
-    public boolean deleteAlert(Long id) {
+    public boolean deleteAlert(UUID id) {
         if (!alertRepository.existsById(id)) return false;
         alertRepository.deleteById(id);
         return true;

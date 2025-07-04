@@ -1,7 +1,11 @@
 package com.deasla.alert.repository;
 
 import com.deasla.alert.model.Alert;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.cassandra.repository.CassandraRepository;
+import org.springframework.stereotype.Repository;
 
-public interface AlertRepository extends JpaRepository<Alert, Long> {
+import java.util.UUID;
+
+@Repository
+public interface AlertRepository extends CassandraRepository<Alert, UUID> {
 }

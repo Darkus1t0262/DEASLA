@@ -1,0 +1,16 @@
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\schedule-service.exe
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\appsettings.json
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\schedule-service.dll
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\schedule-service.deps.json
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\schedule-service.runtimeconfig.json
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\schedule-service.pdb
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\Microsoft.EntityFrameworkCore.dll
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\Microsoft.OpenApi.dll
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\Npgsql.dll
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\schedule-service\out\Swashbuckle.AspNetCore.SwaggerUI.dll

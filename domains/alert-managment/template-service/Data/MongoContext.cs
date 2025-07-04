@@ -16,9 +16,24 @@ namespace TemplateService.Data
             var password = config["MongoSettings:Password"];
             var dbName = config["MongoSettings:Database"];
 
+            // Build the connection string
             var connection = $"mongodb://{user}:{password}@{host}:{port}";
-            var client = new MongoClient(connection);
-            _db = client.GetDatabase(dbName);
+
+            // Create MongoClientSettings and set the authentication mechanism
+            var settings = MongoClientSettings.FromConnectionString(connection);
+
+            // Specify the Authentication Mechanism through MongoCredential
+            var credentials = MongoCredential.CreateCredential(
+                dbName,    // Database name
+                user,      // MongoDB user
+                password   // MongoDB password
+            );
+
+            settings.Credentials = new[] { credentials };
+
+            // Initialize the MongoClient with updated settings
+            var client = new MongoClient(settings);
+            _db = client.GetDatabase(dbName);  // Get the database
         }
 
         public IMongoCollection<Template> Templates => _db.GetCollection<Template>("templates");

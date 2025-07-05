@@ -1,7 +1,7 @@
 using Cassandra;
 using Microsoft.Extensions.Configuration;
 
-namespace AlertService.Data
+namespace AlertServiceApp.Data
 {
     public class CassandraDbContext
     {

@@ -1,5 +1,5 @@
-using AlertService.Data;
-using AlertService.Services;
+using AlertServiceApp.Data;
+using AlertServiceApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddSingleton<CassandraDbContext>();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<CassandraDbContext>().Session);
-builder.Services.AddScoped<AlertManagerService>();
+// Replace 'AlertService' with the actual service class, e.g., 'AlertManagementService'
+builder.Services.AddScoped<AlertServiceApp.Services.AlertService>();
 
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();

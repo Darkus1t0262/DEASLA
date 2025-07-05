@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace AlertService.Models
+namespace AlertServiceApp.Models
 {
     public class Alert
     {

@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[3.19.0, )"
             },
+            "Confluent.Kafka": {
+              "target": "Package",
+              "version": "[2.11.0, )"
+            },
             "Microsoft.OpenApi": {
               "target": "Package",
               "version": "[1.6.23, )"

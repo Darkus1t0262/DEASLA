@@ -1,24 +1,24 @@
-using AlertService.Models;
-using AlertService.Services;
+using AlertServiceApp.Models;
+using AlertServiceApp.Services;    // Correct the namespace here
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace AlertService.Controllers
+namespace AlertServiceApp.Controllers
 {
     [ApiController]
     [Route("api/alerts")]
     public class AlertController : ControllerBase
     {
-        private readonly AlertManagerService _alertService;
+        private readonly AlertService _alertService;  // Correct the service class name
 
         /// <summary>
         /// Constructor with dependency injection for alert service.
         /// </summary>
-        /// <param name="alertService">AlertManagerService instance</param>
-        public AlertController(AlertManagerService alertService)
+        /// <param name="alertService">AlertService instance</param>
+        public AlertController(AlertService alertService)  // Use AlertService, not AlertServiceApp
         {
-            _alertService = alertService;
+            _alertService = alertService;  // Correct the assignment
         }
 
         /// <summary>

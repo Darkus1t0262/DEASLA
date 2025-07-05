@@ -8,10 +8,9 @@ on:
 
 jobs:
 
-  # Job for building and pushing Docker images
   docker-build-push:
     runs-on: ubuntu-latest  # Use the latest Ubuntu image as the build environment
-    
+
     steps:
       # Checkout the code
       - name: Checkout code
@@ -27,47 +26,43 @@ jobs:
       # Build and Push Docker images for each service
       - name: Build and Push Docker Images
         run: |
-          # Define an array with the services and their directories
-          declare -A services=( 
-            ["alert-service"]="domains/alert-managment"
-            ["geo-service"]="domains/alert-managment"
-            ["schedule-service"]="domains/alert-managment"
-            ["template-service"]="domains/alert-managment"
-            ["validation-service"]="domains/alert-managment"
-            ["role-service"]="domains/core"
-            ["user-service"]="domains/core"
-            ["profile-service"]="domains/core"
-            ["auth-service"]="domains/core"
-            ["language-service"]="domains/core"
-            ["logging-service"]="domains/delivery-logging-services"
-            ["push-service"]="domains/delivery-logging-services"
-            ["sms-service"]="domains/delivery-logging-services"
-            ["email-service"]="domains/delivery-logging-services"
-            ["retry-service"]="domains/delivery-logging-services"
-            ["broadcast-service"]="domains/notification"
-            ["channel-service"]="domains/notification"
-            ["retry-engine"]="domains/notification"
-            ["socket-service"]="domains/notification"
-            ["notification-core"]="domains/notification"
-            ["graphql-gateway"]="domains/external"
-            ["soap-consumer"]="domains/external"
-            ["webhook-service"]="domains/external"
-            ["external-push"]="domains/external"
-            ["channel-validator"]="domains/external"
-            ["stat-analyzer"]="domains/report"
-            ["metrics-collector"]="domains/report"
-            ["feedback-service"]="domains/report"
-            ["report-generator"]="domains/report"
-            ["audit-trail"]="domains/report"
+          declare -A services=(
+            ["alert-service"]="domains/alert-managment/alert-service"
+            ["geo-service"]="domains/alert-managment/geo-service"
+            ["schedule-service"]="domains/alert-managment/schedule-service"
+            ["template-service"]="domains/alert-managment/template-service"
+            ["validation-service"]="domains/alert-managment/validation-service"
+            ["role-service"]="domains/core/role-service"
+            ["user-service"]="domains/core/user-service"
+            ["profile-service"]="domains/core/profile-service"
+            ["auth-service"]="domains/core/auth-service"
+            ["language-service"]="domains/core/language-service"
+            ["logging-service"]="domains/delivery-logging-services/logging-service"
+            ["push-service"]="domains/delivery-logging-services/push-service"
+            ["sms-service"]="domains/delivery-logging-services/sms-service"
+            ["email-service"]="domains/delivery-logging-services/email-service"
+            ["retry-service"]="domains/delivery-logging-services/retry-service"
+            ["broadcast-service"]="domains/notification/broadcast-service"
+            ["channel-service"]="domains/notification/channel-service"
+            ["retry-engine"]="domains/notification/retry-engine"
+            ["socket-service"]="domains/notification/socket-service"
+            ["notification-core"]="domains/notification/notification-core"
+            ["graphql-gateway"]="domains/external/graphql-gateway"
+            ["soap-consumer"]="domains/external/soap-consumer"
+            ["webhook-service"]="domains/external/webhook-service"
+            ["external-push"]="domains/external/external-push"
+            ["channel-validator"]="domains/external/channel-validator"
+            ["stat-analyzer"]="domains/report/stat-analyzer"
+            ["metrics-collector"]="domains/report/metrics-collector"
+            ["feedback-service"]="domains/report/feedback-service"
+            ["report-generator"]="domains/report/report-generator"
+            ["audit-trail"]="domains/report/audit-trail"
           )
 
-          # Loop through each service, build and push the Docker image
           for service in "${!services[@]}"; do
-            # Build the Docker image for the service
-            docker build -t darkjus/$service:latest ./${services[$service]}  # Build using the service's directory as context
-            
-            # Push the image to Docker Hub
-            docker push darkjus/$service:latest
+            echo "Building image for $service"
+            docker build -t darkjus/$service:latest ./${services[$service]}  # Use the correct path to each service directory
+            docker push darkjus/$service:latest  # Push the image to Docker Hub
           done
 
       # Optionally, you can also add a step to verify that the images were pushed
@@ -77,7 +72,6 @@ jobs:
             docker pull darkjus/$service:latest  # Pull the image to verify
           done
 
-  # Test jobs (Continue even if some jobs fail)
   test-core:
     runs-on: ubuntu-latest
     continue-on-error: true  # This will allow the job to fail without stopping the pipeline
@@ -124,7 +118,6 @@ jobs:
             npm test
           fi
 
-  # Repeat similar test jobs as needed for other services
   test-alert-management:
     runs-on: ubuntu-latest
     continue-on-error: true  # This will allow the job to fail without stopping the pipeline

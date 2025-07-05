@@ -6,7 +6,7 @@ namespace AlertServiceApp.Services  // Use the correct namespace here
 {
     public class KafkaProducer
     {
-        private readonly string _bootstrapServers = "localhost:9092"; // Kafka Broker address
+        private readonly string _bootstrapServers = "18.209.131.84:9092"; // Kafka Broker address
         private readonly string _topic = "alert-topic"; // Kafka Topic for alerts
 
         public async Task ProduceMessage(string message)

@@ -1,0 +1,78 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main  # Trigger the action on push to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull request to the main branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu image as the build environment
+    
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}  # Docker Hub username stored in GitHub secrets
+          password: ${{ secrets.DOCKER_TOKEN}}  # Docker Hub password stored in GitHub secrets
+
+      # Build and Push Docker images for each service
+      - name: Build and Push Docker Images
+        run: |
+          # Define an array with the services and their directories
+          declare -A services=(
+            ["alert-service"]="domains/alert-managment"
+            ["geo-service"]="domains/alert-managment"
+            ["schedule-service"]="domains/alert-managment"
+            ["template-service"]="domains/alert-managment"
+            ["validation-service"]="domains/alert-managment"
+            ["role-service"]="domains/core"
+            ["user-service"]="domains/core"
+            ["profile-service"]="domains/core"
+            ["auth-service"]="domains/core"
+            ["language-service"]="domains/core"
+            ["logging-service"]="domains/delivery-logging-services"
+            ["push-service"]="domains/delivery-logging-services"
+            ["sms-service"]="domains/delivery-logging-services"
+            ["email-service"]="domains/delivery-logging-services"
+            ["retry-service"]="domains/delivery-logging-services"
+            ["broadcast-service"]="domains/notification"
+            ["channel-service"]="domains/notification"
+            ["retry-engine"]="domains/notification"
+            ["socket-service"]="domains/notification"
+            ["notification-core"]="domains/notification"
+            ["graphql-gateway"]="domains/external"
+            ["soap-consumer"]="domains/external"
+            ["webhook-service"]="domains/external"
+            ["external-push"]="domains/external"
+            ["channel-validator"]="domains/external"
+            ["stat-analyzer"]="domains/report"
+            ["metrics-collector"]="domains/report"
+            ["feedback-service"]="domains/report"
+            ["report-generator"]="domains/report"
+            ["audit-trail"]="domains/report"
+          )
+
+          # Loop through each service, build and push the Docker image
+          for service in "${!services[@]}"; do
+            # Build the Docker image for the service
+            docker build -t darkjus/$service:latest ./${services[$service]}  # Build using the service's directory as context
+            
+            # Push the image to Docker Hub
+            docker push darkjus/$service:latest
+          done
+
+      # Optionally, you can also add a step to verify that the images were pushed
+      - name: Verify Docker Images on Docker Hub
+        run: |
+          for service in "${!services[@]}"; do
+            docker pull darkjus/$service:latest  # Pull the image to verify
+          done

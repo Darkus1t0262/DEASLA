@@ -10,7 +10,7 @@ def start_kafka_consumer():
     try:
         consumer = KafkaConsumer(
             'alert-events',
-            bootstrap_servers='localhost:9092',
+            bootstrap_servers='18.209.131.84:9092',
             group_id='log-service',
             auto_offset_reset='earliest',
             enable_auto_commit=True

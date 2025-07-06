@@ -1,14 +1,15 @@
 variable "vpc_id" {
-  description = "VPC ID where the ALB will be deployed"
+  description = "ID of the VPC"
   type        = string
 }
 
 variable "public_subnet_ids" {
-  description = "List of public subnet IDs for the ALB"
+  description = "List of public subnet IDs"
   type        = list(string)
 }
 
-variable "security_group_id" {
-  description = "Security group ID to associate with the ALB"
+variable "alb_name" {
+  description = "Name of the ALB"
   type        = string
+  default     = "deasla-alb"
 }

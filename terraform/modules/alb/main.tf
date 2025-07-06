@@ -1,42 +1,70 @@
-resource "aws_lb" "deas_alb" {
-  name               = "deas-alb"
-  internal           = false
+resource "aws_lb" "this" {
+  name               = var.alb_name
   load_balancer_type = "application"
-  security_groups    = [var.security_group_id]
   subnets            = var.public_subnet_ids
+  security_groups    = [aws_security_group.alb_sg.id]
+  internal           = false
 
+  enable_deletion_protection = false
   tags = {
-    Name = "deas-alb"
+    Name = var.alb_name
   }
 }
 
-resource "aws_lb_target_group" "deas_tg" {
-  name     = "deas-tg"
-  port     = 80
+resource "aws_security_group" "alb_sg" {
+  name        = "alb-sg"
+  description = "Allow HTTP/HTTPS inbound access"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "alb-sg"
+  }
+}
+
+resource "aws_lb_target_group" "default" {
+  name     = "default-tg"
+  port     = 3001
   protocol = "HTTP"
   vpc_id   = var.vpc_id
 
   health_check {
-    path                = "/"
+    path                = "/health"
     interval            = 30
     timeout             = 5
-    healthy_threshold   = 2
+    healthy_threshold   = 3
     unhealthy_threshold = 2
     matcher             = "200"
   }
-
-  tags = {
-    Name = "deas-tg"
-  }
 }
 
-resource "aws_lb_listener" "deas_listener" {
-  load_balancer_arn = aws_lb.deas_alb.arn
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.this.arn
   port              = 80
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.deas_tg.arn
+    target_group_arn = aws_lb_target_group.default.arn
   }
 }

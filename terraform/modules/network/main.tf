@@ -1,49 +1,53 @@
 resource "aws_vpc" "main" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
-    Name = "deas-vpc"
+    Name = "deasla-vpc"
   }
 }
 
-resource "aws_internet_gateway" "igw" {
+resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
   tags = {
-    Name = "deas-igw"
+    Name = "deasla-igw"
   }
 }
 
 resource "aws_subnet" "public" {
-  count                   = 2
+  count                   = length(var.public_subnet_cidrs)
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = cidrsubnet("10.0.0.0/16", 8, count.index)
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  cidr_block              = var.public_subnet_cidrs[count.index]
+  availability_zone       = "${var.region}${element(["a", "b"], count.index)}"
   map_public_ip_on_launch = true
   tags = {
-    Name = "deas-public-subnet-${count.index}"
+    Name = "deasla-public-${count.index}"
+  }
+}
+
+resource "aws_subnet" "private" {
+  count             = length(var.private_subnet_cidrs)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.private_subnet_cidrs[count.index]
+  availability_zone = "${var.region}${element(["a", "b"], count.index)}"
+  tags = {
+    Name = "deasla-private-${count.index}"
   }
 }
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.gw.id
+  }
   tags = {
-    Name = "deas-public-rt"
+    Name = "deasla-public-rt"
   }
 }
 
-resource "aws_route" "default" {
-  route_table_id         = aws_route_table.public.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.igw.id
-}
-
-resource "aws_route_table_association" "public" {
-  count          = 2
+resource "aws_route_table_association" "public_assoc" {
+  count          = length(aws_subnet.public)
   subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
-}
-
-data "aws_availability_zones" "available" {
-  state = "available"
 }

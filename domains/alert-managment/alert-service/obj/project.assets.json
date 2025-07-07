@@ -4273,19 +4273,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\josue\\.nuget\\packages\\": {}
+    "C:\\Users\\JOSHUA\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\josue\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\alert-service\\AlertService.csproj",
+      "projectUniqueName": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\alert-service\\AlertService.csproj",
       "projectName": "AlertService",
-      "projectPath": "C:\\Users\\josue\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\alert-service\\AlertService.csproj",
-      "packagesPath": "C:\\Users\\josue\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\josue\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\alert-service\\obj\\",
+      "projectPath": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\alert-service\\AlertService.csproj",
+      "packagesPath": "C:\\Users\\JOSHUA\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\alert-service\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\josue\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\JOSHUA\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -4350,7 +4350,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.411/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

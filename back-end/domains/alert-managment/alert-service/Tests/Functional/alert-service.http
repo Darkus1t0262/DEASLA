@@ -1,0 +1,13 @@
+### GET all alerts
+GET http://localhost:5000/api/alerts
+
+### POST a new alert
+POST http://localhost:5000/api/alerts
+Content-Type: application/json
+
+{
+  "message": "This is a test alert"
+}
+
+### GET Health
+GET http://localhost:5000/api/alerts/health

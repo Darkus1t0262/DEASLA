@@ -4278,11 +4278,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\alert-service\\AlertService.csproj",
+      "projectUniqueName": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\back-end\\domains\\alert-managment\\alert-service\\AlertService.csproj",
       "projectName": "AlertService",
-      "projectPath": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\alert-service\\AlertService.csproj",
+      "projectPath": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\back-end\\domains\\alert-managment\\alert-service\\AlertService.csproj",
       "packagesPath": "C:\\Users\\JOSHUA\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\alert-service\\obj\\",
+      "outputPath": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\back-end\\domains\\alert-managment\\alert-service\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\JOSHUA\\AppData\\Roaming\\NuGet\\NuGet.Config"

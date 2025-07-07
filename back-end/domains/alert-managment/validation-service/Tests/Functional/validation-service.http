@@ -1,0 +1,9 @@
+GET http://localhost:5003/api/validation
+
+POST http://localhost:5003/api/validation
+Content-Type: application/json
+
+{
+  "userId": "abc123",
+  "isValid": true
+}

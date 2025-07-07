@@ -1,0 +1,17 @@
+GET http://localhost:8080/api/geo/zones
+
+POST http://localhost:8080/api/geo/zones
+Content-Type: application/json
+
+{
+  "name": "TestZone",
+  "polygon": [[0,0], [0,1], [1,1], [1,0]]
+}
+
+POST http://localhost:8080/api/geo/zones/abc123/contains
+Content-Type: application/json
+
+{
+  "lat": 0.5,
+  "lon": 0.5
+}

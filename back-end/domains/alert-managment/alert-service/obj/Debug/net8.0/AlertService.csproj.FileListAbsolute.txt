@@ -61,3 +61,14 @@ C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\alert-service\obj
 C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.pdb
 C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.genruntimeconfig.cache
 C:\Users\josue\Documents\GitHub\DEASLA\domains\alert-managment\alert-service\obj\Debug\net8.0\ref\AlertService.dll
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.csproj.AssemblyReference.cache
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.AssemblyInfoInputs.cache
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.AssemblyInfo.cs
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.csproj.CoreCompileInputs.cache
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.sourcelink.json
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.dll
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\refint\AlertService.dll
+C:\Users\JOSHUA\Documents\GitHub\DEASLA\back-end\domains\alert-managment\alert-service\obj\Debug\net8.0\AlertService.pdb

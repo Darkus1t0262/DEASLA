@@ -1,0 +1,9 @@
+GET http://localhost:5001/api/schedule
+
+POST http://localhost:5001/api/schedule
+Content-Type: application/json
+
+{
+  "title": "Test Schedule",
+  "time": "2025-07-06T18:00:00Z"
+}

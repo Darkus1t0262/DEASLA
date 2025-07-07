@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tCqIwPelul0G5aAgnvkxVS0IcQYpx1tEGULPhHDA06/cDYk8odPf57ZGgQ4UTbCv+DirtNbqBilFWYcg1gagiw==",
+  "dgSpecHash": "MIcepn1C39GejIDC0Gy5wyA9ybGONO6QTjfwCJVCqVj5REGBtk1qLjlllq8d2wewuHoKdLKGltsijUzIOOUXiA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\domains\\alert-managment\\alert-service\\AlertService.csproj",
+  "projectFilePath": "C:\\Users\\JOSHUA\\Documents\\GitHub\\DEASLA\\back-end\\domains\\alert-managment\\alert-service\\AlertService.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\JOSHUA\\.nuget\\packages\\cassandracsharpdriver\\3.19.0\\cassandracsharpdriver.3.19.0.nupkg.sha512",
     "C:\\Users\\JOSHUA\\.nuget\\packages\\confluent.kafka\\2.11.0\\confluent.kafka.2.11.0.nupkg.sha512",

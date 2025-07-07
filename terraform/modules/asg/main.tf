@@ -1,22 +1,35 @@
-resource "aws_launch_template" "microservice" {
-  name_prefix   = "deas-launch-template-"
-  image_id      = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
+resource "aws_launch_template" "this" {
+  name_prefix   = "deasla-core-lt-"
+  image_id      = var.ami_id
+  instance_type = var.instance_type
+  key_name      = var.key_name
 
-  user_data = base64encode(templatefile("${path.module}/cloud-init.sh.tpl", {
-    docker_images  = var.docker_images
-  }))
+  vpc_security_group_ids = var.security_group_ids
+
+  user_data = filebase64("${path.module}/user_data.sh")
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
-resource "aws_autoscaling_group" "microservice_asg" {
-  count               = length(var.instance_names)
-  desired_capacity    = 1
-  max_size            = 2
-  min_size            = 1
-  vpc_zone_identifier = var.public_subnet_ids
+resource "aws_autoscaling_group" "this" {
+  name                      = "deasla-core-asg"
+  max_size                  = 3
+  min_size                  = 1
+  desired_capacity          = 1
+  vpc_zone_identifier       = var.subnet_ids
+  health_check_type         = "EC2"
+  health_check_grace_period = 60
   launch_template {
-    id      = aws_launch_template.microservice.id
+    id      = aws_launch_template.this.id
     version = "$Latest"
   }
-  target_group_arns = [var.target_group_arns[count.index]]
+  target_group_arns = [var.alb_target_group_arn]
+
+  tag {
+    key                 = "Name"
+    value               = "deasla-core-instance"
+    propagate_at_launch = true
+  }
 }

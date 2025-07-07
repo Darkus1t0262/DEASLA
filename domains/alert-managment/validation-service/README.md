@@ -1,7 +1,7 @@
 # Validation Service
 
 **Domain:** Alert Management  
-**Tech:** Java, Spring Boot, PostgreSQL, REST  
+**Tech:** C#, .NET Core, PostgreSQL, REST  
 **Design Patterns:** Repository, Singleton
 
 ## Overview
@@ -18,23 +18,31 @@ It can log the validation result for later audit or monitoring.
 
 ## How It Works
 
-- **Singleton pattern:** Spring Boot services/components are singleton by default.
-- **Repository pattern:** ValidationResultRepository abstracts all DB logic.
+- **Singleton pattern:** .NET Core services/components are singleton by default.
+- **Repository pattern:** `ValidationResultRepository` abstracts all DB logic.
 - **Swagger/OpenAPI:** See `openapi.yaml` or `/swagger-ui.html` when running.
-- **Unit tests:** Run with `mvn test`.
+- **Unit tests:** Run with `dotnet test`.
 
 ## CI/CD
 
-Automated tests with GitHub Actions in .github/workflows/ci.yml
+Automated tests with GitHub Actions in `.github/workflows/ci.yml`
 
 ## Run Locally
 
 ```bash
-# Set DB in application.properties, then:
-mvn clean package
-java -jar target/validation-service-1.0.0.jar
+# Set DB in appsettings.json, then:
+dotnet build
+dotnet run
 
-#Dcoker
+# Docker
+
+docker build -t validation-service .
+docker run -e "ASPNETCORE_ENVIRONMENT=Development" \
+           -e "ConnectionStrings__DefaultConnection=Host=localhost;Port=5432;Database=deaslapg;Username=admin;Password=securepasspg" \
+           -p 5000:5000 validation-service
+
+
+#Docker
 
 docker build -t validation-service .
 docker run -e SPRING_DATASOURCE_URL=jdbc:postgresql://dbhost:5432/deasla_validation \

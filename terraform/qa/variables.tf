@@ -1,10 +1,16 @@
-# AWS Key Pair for EC2 SSH access
-variable "DEAS2" {
+# =====================
+# AWS Key Pair
+# =====================
+
+variable "key_name" {
   description = "AWS EC2 Key Pair name for SSH access to instances"
   type        = string
 }
 
-# Database Passwords (store in .tfvars or via secrets)
+# =====================
+# DATABASE PASSWORDS
+# =====================
+
 variable "pg_password" {
   description = "PostgreSQL database password"
   type        = string
@@ -28,3 +34,18 @@ variable "cassandra_password" {
   type        = string
   sensitive   = true
 }
+
+# =====================
+# SERVICE EC2 MODULE INPUTS
+# =====================
+
+variable "instance_name" {
+  description = "List of instance names for microservices and DB nodes"
+  type        = list(string)
+}
+
+variable "docker_images" {
+  description = "List of Docker image groups per instance"
+  type        = list(list(string))
+}
+

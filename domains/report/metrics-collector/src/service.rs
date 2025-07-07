@@ -5,24 +5,54 @@ use futures::stream::StreamExt;
 
 pub async fn insert_metric(db: &Database, mut metric: Metric) -> Result<()> {
     let collection = db.collection("metrics");
+
+    // Set fallback if source not provided
+    if metric.source.is_none() {
+        metric.source = Some("unknown".to_string());
+    }
+
+    // Set timestamp
     metric.collected_at = Some(Utc::now().to_rfc3339());
-    let doc = to_document(&metric)?;
-    collection.insert_one(doc, None).await?;
-    Ok(())
+
+    // Debug: Print input
+    println!("📥 Received metric: {:?}", metric);
+
+    // Convert to BSON document
+    let doc = match to_document(&metric) {
+        Ok(doc) => doc,
+        Err(e) => {
+            eprintln!("❌ Error serializing metric: {:?}", e);
+            return Err(e.into()); // 👈 FIX aquí
+        }
+    };
+
+    // Insert
+    match collection.insert_one(doc, None).await {
+        Ok(res) => {
+            println!("✅ Inserted metric with ID: {:?}", res.inserted_id);
+            Ok(())
+        },
+        Err(e) => {
+            eprintln!("❌ Failed to insert metric: {:?}", e);
+            Err(e)
+        }
+    }
 }
 
 pub async fn get_metrics(db: &Database) -> Result<Vec<Metric>> {
     let collection = db.collection("metrics");
     let mut cursor = collection.find(None, None).await?;
     let mut metrics = Vec::new();
+
     while let Some(result) = cursor.next().await {
         match result {
-            Ok(doc) => {
-                let metric: Metric = from_document(doc).unwrap();
-                metrics.push(metric);
+            Ok(doc) => match from_document::<Metric>(doc) {
+                Ok(metric) => metrics.push(metric),
+                Err(e) => eprintln!("⚠️ Failed to parse document: {:?}", e),
             },
-            Err(e) => eprintln!("Error reading metric: {:?}", e),
+            Err(e) => eprintln!("⚠️ Error reading from DB: {:?}", e),
         }
     }
+
     Ok(metrics)
 }

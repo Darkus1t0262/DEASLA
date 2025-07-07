@@ -1,17 +1,16 @@
 use serde::{Serialize, Deserialize};
-use chrono::{NaiveDateTime};
+use chrono::NaiveDateTime;
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct LogRequest {
     pub actor: String,
     pub action: String,
-    // Add any other fields you POST from the client
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug, sqlx::FromRow)]
 pub struct AuditLog {
-    pub id: i32,                         // i32 to match PostgreSQL SERIAL type
+    pub id: i32,
     pub actor: String,
     pub action: String,
-    pub timestamp: NaiveDateTime,        // or String if you prefer
+    pub timestamp: NaiveDateTime, // Compatible with PostgreSQL TIMESTAMP
 }

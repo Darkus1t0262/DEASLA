@@ -1,11 +1,24 @@
-FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
+# ---- Build Stage ----
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
 
-FROM eclipse-temurin:17-jre-alpine
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
+
+# Copy the rest of the source code
+COPY . ./
+RUN dotnet publish -c Release -o /app/publish
+
+# ---- Runtime Stage ----
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/target/alert-service-1.0.0.jar app.jar
+
+# Copy published output
+COPY --from=build /app/publish .
+
+# Expose the port used in the application
 EXPOSE 8081
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Run the application
+ENTRYPOINT ["dotnet", "AlertService.dll"]

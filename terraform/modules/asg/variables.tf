@@ -1,23 +1,34 @@
 variable "vpc_id" {
-  type = string
+  type        = string
+  description = "The VPC ID"
 }
 
-variable "public_subnet_ids" {
-  type = list(string)
+variable "subnet_ids" {
+  type        = list(string)
+  description = "Subnets for the Auto Scaling Group"
 }
 
-variable "instance_names" {
-  type = list(string)
+variable "alb_target_group_arn" {
+  type        = string
+  description = "Target Group ARN for ALB"
 }
 
-variable "docker_images" {
-  type = list(string)
+variable "instance_type" {
+  default     = "t3.small"
+  description = "EC2 instance type"
 }
 
-variable "target_group_arns" {
-  type = list(string)
+variable "ami_id" {
+  description = "AMI ID to use for launch template"
+  type        = string
 }
 
-variable "alb_listener_arn" {
-  type = string
+variable "key_name" {
+  description = "Key pair name for SSH access"
+  type        = string
+}
+
+variable "security_group_ids" {
+  type        = list(string)
+  description = "Security groups to attach"
 }

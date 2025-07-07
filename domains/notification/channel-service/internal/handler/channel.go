@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"channel-service/internal/model"
+	"channel-service/internal/service"
 	"net/http"
-	"notification/internal/model"
-	"notification/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,12 +1,23 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const promBundle = require('express-prom-bundle');
 const { sequelize } = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
+
+// Prometheus metrics middleware
+const metricsMiddleware = promBundle({
+  includeMethod: true,
+  includePath: true,
+  promClient: { collectDefaultMetrics: {} },
+  customLabels: { project: 'user-service' }
+});
+
 app.use(cors());
 app.use(express.json());
+app.use(metricsMiddleware); // 👈 injects /metrics automatically
 
 app.use('/api/users', userRoutes);
 
@@ -22,12 +33,21 @@ app.get('/health', async (req, res) => {
 
 const PORT = process.env.PORT || 3002;
 
-sequelize.authenticate().then(() => {
-    console.log('User DB connected!');
-    app.listen(PORT, () => console.log(`User Service running on port ${PORT}`));
-}).catch(err => {
-    console.error('DB connection failed:', err);
+// ✅ Authenticate, then sync DB, then start server
+sequelize.authenticate()
+  .then(() => {
+    console.log('✅ User DB connected!');
+    return sequelize.sync({ alter: true });  // auto-create/update tables
+  })
+  .then(() => {
+    console.log('✅ Sequelize sync complete!');
+    app.listen(PORT, () => {
+      console.log(`🚀 User Service running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ Startup failed:', err);
     process.exit(1);
-});
+  });
 
 module.exports = app;

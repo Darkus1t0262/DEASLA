@@ -7,6 +7,6 @@ pub struct Metric {
     pub id: Option<ObjectId>,
     pub name: String,
     pub value: f64,
-    pub source: String,
-    pub collected_at: Option<String>, // set in service
+    pub source: Option<String>, // ahora es opcional
+    pub collected_at: Option<String>, // se establece en service
 }

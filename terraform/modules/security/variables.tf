@@ -1,8 +1,4 @@
 variable "vpc_id" {
-  description = "The ID of the VPC"
+  description = "ID of the VPC to attach security groups to"
   type        = string
-}
-variable "public_subnet_ids" {
-  description = "List of public subnet IDs"
-  type        = list(string)
 }

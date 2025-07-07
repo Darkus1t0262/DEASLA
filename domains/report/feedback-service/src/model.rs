@@ -1,15 +1,20 @@
 use serde::{Serialize, Deserialize};
+use bson::oid::ObjectId;
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct FeedbackRequest {
     pub user: String,
     pub comment: String,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Feedback {
-    pub id: usize,
+    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<ObjectId>,
+
     pub user: String,
     pub comment: String,
-    pub timestamp: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub timestamp: Option<String>,
 }

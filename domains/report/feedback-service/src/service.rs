@@ -1,27 +1,41 @@
-use crate::model::Report;
-use mongodb::{Database, bson::{to_document, from_document, doc}, error::Result};
+use crate::model::{Feedback, FeedbackRequest};
+use mongodb::{
+    Database,
+    bson::{to_document, from_document},
+    error::Result,
+};
 use chrono::Utc;
+use futures::StreamExt;
 
-pub async fn insert_report(db: &Database, mut report: Report) -> Result<()> {
-    let collection = db.collection("reports");
-    report.created_at = Some(Utc::now().to_rfc3339());
-    let doc = to_document(&report)?;
+pub async fn save_feedback(db: &Database, req: FeedbackRequest) -> Result<()> {
+    let collection = db.collection("feedbacks");
+
+    let feedback = Feedback {
+        id: None, // Let MongoDB assign _id automatically
+        user: req.user,
+        comment: req.comment,
+        timestamp: Some(Utc::now().to_rfc3339()),
+    };
+
+    let doc = to_document(&feedback)?;
     collection.insert_one(doc, None).await?;
     Ok(())
 }
 
-pub async fn get_reports(db: &Database) -> Result<Vec<Report>> {
-    let collection = db.collection("reports");
+pub async fn get_feedbacks(db: &Database) -> Result<Vec<Feedback>> {
+    let collection = db.collection("feedbacks");
     let mut cursor = collection.find(None, None).await?;
-    let mut reports = Vec::new();
+    let mut feedbacks = Vec::new();
+
     while let Some(result) = cursor.next().await {
         match result {
-            Ok(doc) => {
-                let report: Report = from_document(doc).unwrap();
-                reports.push(report);
+            Ok(doc) => match from_document::<Feedback>(doc) {
+                Ok(feedback) => feedbacks.push(feedback),
+                Err(e) => eprintln!("⚠️ Failed to parse document: {:?}", e),
             },
-            Err(e) => eprintln!("Error reading report: {:?}", e),
+            Err(e) => eprintln!("⚠️ Error reading from DB: {:?}", e),
         }
     }
-    Ok(reports)
+
+    Ok(feedbacks)
 }

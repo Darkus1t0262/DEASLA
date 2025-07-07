@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "rQ/bK10jXvipnxE3pRCKURLadbi+l2Z27Inzf7cQW6s=",
+  "Source": "schedule-service",
+  "BasePath": "_content/schedule-service",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

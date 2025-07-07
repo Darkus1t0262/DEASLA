@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "ahBwSZC9+D4BVfeQwqZhOUgxRCp2l9R2W3sjZJp0aZg=",
+  "Source": "template-service",
+  "BasePath": "_content/template-service",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

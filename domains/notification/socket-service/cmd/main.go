@@ -1,16 +1,41 @@
 package main
 
 import (
-    "github.com/gin-gonic/gin"
-    "notification/internal/handler"
-    "notification/internal/db" // Import your db package
+	"socket-service/internal/db"      // Redis init
+	"socket-service/internal/handler" // WebSocket + health
+
+	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func main() {
-    db.InitRedis() // Initialize Redis connection at startup
+// Custom metric: total websocket connections
+var socketConnections = prometheus.NewCounter(prometheus.CounterOpts{
+	Name: "socket_connections_total",
+	Help: "Total WebSocket connections established",
+})
 
-    r := gin.Default()
-    r.GET("/health", handler.Health)
-    r.GET("/ws", handler.SocketHandler)
-    r.Run(":4105")
+func init() {
+	// Register metric
+	prometheus.MustRegister(socketConnections)
+}
+
+func main() {
+	db.InitRedis() // Redis init
+
+	r := gin.Default()
+
+	// Prometheus metrics endpoint
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+
+	// Health check
+	r.GET("/health", handler.Health)
+
+	// WebSocket endpoint
+	r.GET("/ws", func(c *gin.Context) {
+		socketConnections.Inc() // Count each connection
+		handler.SocketHandler(c)
+	})
+
+	r.Run(":4105")
 }

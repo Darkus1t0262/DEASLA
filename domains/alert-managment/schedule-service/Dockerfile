@@ -1,11 +1,27 @@
-FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
+EXPOSE 8084
 
-FROM eclipse-temurin:17-jre-alpine
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy the project files into the container
+COPY . .
+
+# Restore dependencies
+RUN dotnet restore
+
+# Publish the application
+RUN dotnet publish -c Release -o /app/publish
+
+FROM base AS final
 WORKDIR /app
-COPY --from=build /app/target/schedule-service-1.0.0.jar app.jar
-EXPOSE 8082
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Copy the published files from the build stage
+COPY --from=build /app/publish ./
+
+# Verify the files copied correctly
+RUN ls -l /app
+
+# Set entry point to the correct DLL
+ENTRYPOINT ["dotnet", "schedule-service.dll"]

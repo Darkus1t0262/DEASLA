@@ -24,3 +24,8 @@ pub async fn fetch_metrics(
         Err(e) => HttpResponse::InternalServerError().body(format!("Error: {}", e)),
     }
 }
+
+#[get("/health")]
+pub async fn health_check() -> impl Responder {
+    HttpResponse::Ok().body("🟢 metrics-collector is healthy")
+}

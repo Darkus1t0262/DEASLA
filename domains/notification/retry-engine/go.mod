@@ -1,4 +1,4 @@
-module notification
+module retry-engine
 
 go 1.22
 
